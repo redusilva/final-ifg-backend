@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { IDatabaseService } from "../intefaces/services/IDatabaseService";
 import { IAuthService } from "../intefaces/services/IAuthService";
-import { CreateUserValidator, LoginUserValidator } from "../validators/UserValidator";
+import { CreateUserValidator, LoginUserValidator, ValidateTokenSchema } from "../validators/UserValidator";
 import { buildPublicUserData } from "../utils/builder";
 import { IUser } from "../intefaces/entities/User";
-import { IAuthController } from "../intefaces/controllers/IAuthController";
 import { ILogService } from "../intefaces/services/ILogService";
 import { IPasswordService } from "../intefaces/services/IPasswordService";
 import { ITokenService } from "../intefaces/services/ITokenService";
@@ -17,7 +16,7 @@ type AuthControllerDependencies = {
     tokenService: ITokenService;
 };
 
-class AuthController implements IAuthController {
+class AuthController {
     private databaseService: IDatabaseService;
     private authService: IAuthService;
     private logService: ILogService;
@@ -142,6 +141,37 @@ class AuthController implements IAuthController {
         } catch (error) {
             this.logService.createLog(
                 `Error creating user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                "error"
+            );
+            return res.status(500).json({
+                message: "Internal server error"
+            });
+        }
+    }
+
+    async token(req: Request, res: Response) {
+        try {
+            const body = req.body;
+
+            const result = ValidateTokenSchema.safeParse(body);
+            if (!result.success) {
+                return res.status(400).json({
+                    message: "Invalid request data",
+                    errors: result.error.errors
+                });
+            }
+
+            const token = result.data.token;
+
+            const isValid = this.tokenService.verifyToken(token);
+            if (!isValid) {
+                return res.status(401).json({ message: "Invalid token" });
+            }
+
+            return res.status(200).json({ message: "Token valid" });
+        } catch (error) {
+            this.logService.createLog(
+                `Error validating token: ${error instanceof Error ? error.message : 'Unknown error'}`,
                 "error"
             );
             return res.status(500).json({

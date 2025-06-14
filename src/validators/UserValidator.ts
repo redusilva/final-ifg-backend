@@ -12,4 +12,11 @@ export const LoginUserValidator = zod.object({
     email: zod.string().email().max(100),
     password: zod.string().min(8).max(100)
 });
+
 export type LoginUserValidatorType = zod.infer<typeof LoginUserValidator>;
+
+export const ValidateTokenSchema = zod.object({
+    token: zod.string().min(1)
+});
+
+export type ValidateTokenType = zod.infer<typeof ValidateTokenSchema>;

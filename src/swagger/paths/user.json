@@ -231,5 +231,100 @@
                 }
             }
         }
+    },
+    "/auth/token": {
+        "post": {
+            "summary": "Validação de token",
+            "description": "Endpoint para validar um token de autenticação.",
+            "tags": [
+                "Auth"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "token"
+                            ]
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Requisição realizada com sucesso. Token válido.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Requisição inválida. Dados fornecidos está incorretos ou incompletos.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "errors": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Token inválido. O token fornecido está incorreto ou expirado.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno do servidor. Ocorreu um erro ao processar a requisição.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
