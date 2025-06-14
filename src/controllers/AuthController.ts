@@ -52,7 +52,6 @@ class AuthController {
                 });
             }
 
-            await this.databaseService.connect();
             const session = await this.databaseService.startTransaction();
             const user = await this.authService.getUserByEmail(req.body.email, session);
             if (!user) {
@@ -109,8 +108,6 @@ class AuthController {
                     errors: result.error.errors
                 });
             }
-
-            await this.databaseService.connect();
 
             const session = await this.databaseService.startTransaction();
 
@@ -197,8 +194,6 @@ class AuthController {
                 return res.status(400).json({ message: "Invalid request data" });
             }
 
-            await this.databaseService.connect();
-
             const user = await this.authService.getUserById(id);
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
@@ -231,8 +226,6 @@ class AuthController {
             if (!id) {
                 return res.status(400).json({ message: "Invalid request data" });
             }
-
-            await this.databaseService.connect();
 
             const user = await this.authService.getUserById(id);
             if (!user) {
