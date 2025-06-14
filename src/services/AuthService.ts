@@ -52,6 +52,10 @@ class AuthService implements IAuthService {
         const result = await this.authRepository.getUserById(id);
         return result;
     }
+
+    async deleteUserById(id: string): Promise<void> {
+        await this.authRepository.deleteUserById(id);
+    }
 }
 
 export default AuthService;

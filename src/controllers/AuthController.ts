@@ -214,6 +214,39 @@ class AuthController {
             });
         }
     }
+
+    async deleteUser(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization?.split(" ")[1];
+            const isValid = this.tokenService.verifyToken(token || "");
+            if (!isValid) {
+                return res.status(401).json({ message: "User not authorized" });
+            }
+
+            const id = req.params.id;
+            if (!id) {
+                return res.status(400).json({ message: "Invalid request data" });
+            }
+
+            await this.databaseService.connect();
+
+            const user = await this.authService.getUserById(id);
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            await this.authService.deleteUserById(id);
+            return res.status(200).json({ message: "User deleted successfully" });
+        } catch (error) {
+            this.logService.createLog(
+                `Error deleting user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                "error"
+            );
+            return res.status(500).json({
+                message: "Internal server error"
+            });
+        }
+    }
 }
 
 export default AuthController;

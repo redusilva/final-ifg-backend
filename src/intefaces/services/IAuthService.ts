@@ -7,4 +7,6 @@ export interface IAuthService {
     createUser(user: CreateUserValidatorType, session: any): Promise<{ status: number; data: IUser | null; message: string }>;
 
     getUserById(id: string): Promise<IUser | null>;
+
+    deleteUserById(id: string): Promise<void>;
 }

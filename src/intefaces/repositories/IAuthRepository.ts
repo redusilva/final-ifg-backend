@@ -7,4 +7,6 @@ export interface IAuthRepository {
     createUser(user: CreateUserValidatorType, session: any): Promise<IUser | null>;
 
     getUserById(id: string): Promise<IUser | null>;
+
+    deleteUserById(id: string): Promise<void>;
 }

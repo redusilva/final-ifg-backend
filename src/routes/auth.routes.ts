@@ -94,4 +94,25 @@ router.get('/:id', async (req, res): Promise<any> => {
     return result;
 });
 
+router.delete('/:id', async (req, res): Promise<any> => {
+    const authRepository = new AuthMongooseRepository();
+    const logService = new LogService();
+    const tokenService = new JwtTokenService(config.JWT_SECRET);
+    const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
+    const authService = new AuthService({
+        authRepository
+    });
+    const databaseService = new MongooseService(config.MONGO_URI);
+    const authController = new AuthController({
+        databaseService,
+        authService,
+        logService,
+        passwordService,
+        tokenService
+    });
+
+    const result = await authController.deleteUser(req, res);
+    return result;
+});
+
 export default router;

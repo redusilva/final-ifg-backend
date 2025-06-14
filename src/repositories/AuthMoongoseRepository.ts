@@ -55,6 +55,10 @@ class AuthMongooseRepository implements IAuthRepository {
             updated_at: result.updated_at
         }
     }
+
+    async deleteUserById(id: string): Promise<void> {
+        await UserModel.findByIdAndDelete(id);
+    }
 }
 
 export default AuthMongooseRepository;
