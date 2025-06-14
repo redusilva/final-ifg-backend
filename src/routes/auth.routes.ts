@@ -7,12 +7,14 @@ import { config } from '../confg/env';
 import { LogService } from '../services/LogService';
 import { BcryptPasswordService } from '../services/BcryptPasswordService';
 import { JwtTokenService } from '../services/JwtTokenService';
+import { UserZodValidator } from '../intefaces/services/UserZodValidator';
 
 const router = express.Router();
 
 router.post('/', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const validateService = new UserZodValidator();
     const tokenService = new JwtTokenService(config.JWT_SECRET);
     const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
@@ -24,7 +26,8 @@ router.post('/', async (req, res): Promise<any> => {
         authService,
         logService,
         passwordService,
-        tokenService
+        tokenService,
+        validateService
     });
 
     const result = await authController.create(req, res);
@@ -34,6 +37,7 @@ router.post('/', async (req, res): Promise<any> => {
 router.post('/login', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const validateService = new UserZodValidator();
     const tokenService = new JwtTokenService(config.JWT_SECRET);
     const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
@@ -45,7 +49,8 @@ router.post('/login', async (req, res): Promise<any> => {
         authService,
         logService,
         passwordService,
-        tokenService
+        tokenService,
+        validateService
     });
 
     const result = await authController.login(req, res);
@@ -55,6 +60,7 @@ router.post('/login', async (req, res): Promise<any> => {
 router.post('/token', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const validateService = new UserZodValidator();
     const tokenService = new JwtTokenService(config.JWT_SECRET);
     const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
@@ -66,7 +72,8 @@ router.post('/token', async (req, res): Promise<any> => {
         authService,
         logService,
         passwordService,
-        tokenService
+        tokenService,
+        validateService
     });
 
     const result = await authController.token(req, res);
@@ -76,6 +83,7 @@ router.post('/token', async (req, res): Promise<any> => {
 router.get('/:id', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const validateService = new UserZodValidator();
     const tokenService = new JwtTokenService(config.JWT_SECRET);
     const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
@@ -87,7 +95,8 @@ router.get('/:id', async (req, res): Promise<any> => {
         authService,
         logService,
         passwordService,
-        tokenService
+        tokenService,
+        validateService
     });
 
     const result = await authController.getUser(req, res);
@@ -97,6 +106,7 @@ router.get('/:id', async (req, res): Promise<any> => {
 router.delete('/:id', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const validateService = new UserZodValidator();
     const tokenService = new JwtTokenService(config.JWT_SECRET);
     const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
@@ -108,7 +118,8 @@ router.delete('/:id', async (req, res): Promise<any> => {
         authService,
         logService,
         passwordService,
-        tokenService
+        tokenService,
+        validateService
     });
 
     const result = await authController.deleteUser(req, res);

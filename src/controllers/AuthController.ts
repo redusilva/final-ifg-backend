@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { IDatabaseService } from "../intefaces/services/IDatabaseService";
 import { IAuthService } from "../intefaces/services/IAuthService";
-import { CreateUserValidator, LoginUserValidator, ValidateTokenSchema } from "../validators/UserValidator";
 import { buildPublicUserData } from "../utils/builder";
 import { IUser } from "../intefaces/entities/User";
 import { ILogService } from "../intefaces/services/ILogService";
 import { IPasswordService } from "../intefaces/services/IPasswordService";
 import { ITokenService } from "../intefaces/services/ITokenService";
+import { IUserValidator } from "../intefaces/services/IUserValidator";
 
 type AuthControllerDependencies = {
     databaseService: IDatabaseService;
@@ -14,6 +14,7 @@ type AuthControllerDependencies = {
     logService: ILogService;
     passwordService: IPasswordService;
     tokenService: ITokenService;
+    validateService: IUserValidator;
 };
 
 class AuthController {
@@ -22,25 +23,28 @@ class AuthController {
     private logService: ILogService;
     private passwordService: IPasswordService;
     private tokenService: ITokenService;
+    private validateService: IUserValidator;
 
     constructor({
         databaseService,
         authService,
         logService,
         passwordService,
-        tokenService
+        tokenService,
+        validateService
     }: AuthControllerDependencies) {
         this.databaseService = databaseService;
         this.authService = authService;
         this.logService = logService;
         this.passwordService = passwordService;
         this.tokenService = tokenService;
+        this.validateService = validateService;
     }
 
     async login(req: Request, res: Response) {
         try {
             const body = req.body;
-            const result = LoginUserValidator.safeParse(body);
+            const result = this.validateService.validateLoginUser(body);
             if (!result.success) {
                 return res.status(400).json({
                     message: "Invalid request data",
@@ -98,7 +102,7 @@ class AuthController {
     async create(req: Request, res: Response) {
         try {
             const body = req.body;
-            const result = CreateUserValidator.safeParse(body);
+            const result = this.validateService.validateCreateUser(body);
             if (!result.success) {
                 return res.status(400).json({
                     message: "Invalid request data",
@@ -153,7 +157,7 @@ class AuthController {
         try {
             const body = req.body;
 
-            const result = ValidateTokenSchema.safeParse(body);
+            const result = this.validateService.validateToken(body);
             if (!result.success) {
                 return res.status(400).json({
                     message: "Invalid request data",

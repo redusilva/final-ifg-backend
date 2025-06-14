@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 import zod from 'zod';
 
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 const envSchema = zod.object({
     PORT: zod.string().regex(/^\d+$/).transform(Number),
