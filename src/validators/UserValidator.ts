@@ -7,3 +7,9 @@ export const CreateUserValidator = zod.object({
 });
 
 export type CreateUserValidatorType = zod.infer<typeof CreateUserValidator>;
+
+export const LoginUserValidator = zod.object({
+    email: zod.string().email().max(100),
+    password: zod.string().min(8).max(100)
+});
+export type LoginUserValidatorType = zod.infer<typeof LoginUserValidator>;

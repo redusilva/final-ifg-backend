@@ -4,7 +4,7 @@
             "summary": "Criar novo usuário",
             "description": "Endpoint para criar um novo usuário no sistema.",
             "tags": [
-                "Usuários"
+                "Auth"
             ],
             "requestBody": {
                 "required": true,
@@ -89,6 +89,125 @@
                                         "items": {
                                             "type": "string"
                                         }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno do servidor. Ocorreu um erro ao processar a requisição.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/auth/login": {
+        "post": {
+            "summary": "Login de usuário",
+            "description": "Endpoint para autenticar um usuário no sistema.",
+            "tags": [
+                "Auth"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "format": "email"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "format": "password"
+                                }
+                            },
+                            "required": [
+                                "email",
+                                "password"
+                            ]
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Requisição realizada com sucesso. Usuário autenticado.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Requisição inválida. Dados fornecidos estão incorretos ou incompletos.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "errors": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Credenciais inválidas. O email ou senha fornecidos estão incorretos.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Usuário não encontrado. O email fornecido não foi encontrado em nossa base de dados.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
                                     }
                                 }
                             }

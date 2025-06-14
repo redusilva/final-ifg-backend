@@ -5,12 +5,16 @@ import AuthMongooseRepository from '../repositories/AuthMoongoseRepository';
 import { MongooseService } from '../services/MongooseService';
 import { config } from '../confg/env';
 import { LogService } from '../services/LogService';
+import { BcryptPasswordService } from '../services/BcryptPasswordService';
+import { JwtTokenService } from '../services/JwtTokenService';
 
 const router = express.Router();
 
 router.post('/', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const tokenService = new JwtTokenService(config.JWT_SECRET);
+    const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
         authRepository
     });
@@ -18,7 +22,9 @@ router.post('/', async (req, res): Promise<any> => {
     const authController = new AuthController({
         databaseService,
         authService,
-        logService
+        logService,
+        passwordService,
+        tokenService
     });
 
     const result = await authController.create(req, res);
@@ -28,6 +34,8 @@ router.post('/', async (req, res): Promise<any> => {
 router.post('/login', async (req, res): Promise<any> => {
     const authRepository = new AuthMongooseRepository();
     const logService = new LogService();
+    const tokenService = new JwtTokenService(config.JWT_SECRET);
+    const passwordService = new BcryptPasswordService(config.PASSWORD_SALTS);
     const authService = new AuthService({
         authRepository
     });
@@ -35,7 +43,9 @@ router.post('/login', async (req, res): Promise<any> => {
     const authController = new AuthController({
         databaseService,
         authService,
-        logService
+        logService,
+        passwordService,
+        tokenService
     });
 
     const result = await authController.login(req, res);

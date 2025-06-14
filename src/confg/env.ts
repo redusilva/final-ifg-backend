@@ -5,7 +5,9 @@ dotenv.config();
 
 const envSchema = zod.object({
     PORT: zod.string().regex(/^\d+$/).transform(Number),
+    PASSWORD_SALTS: zod.string().regex(/^\d+$/).transform(Number),
     MONGO_URI: zod.string().url(),
+    JWT_SECRET: zod.string().min(1),
 });
 
 const env = envSchema.safeParse(process.env);
