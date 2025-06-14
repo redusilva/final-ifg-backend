@@ -47,6 +47,11 @@ class AuthService implements IAuthService {
             message: 'User created successfully'
         }
     }
+
+    async getUserById(id: string): Promise<IUser | null> {
+        const result = await this.authRepository.getUserById(id);
+        return result;
+    }
 }
 
 export default AuthService;

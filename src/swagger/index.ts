@@ -27,7 +27,13 @@ export const swaggerConfig = {
         schemas: {},
         responses: {},
         parameters: {},
-        securitySchemes: {},
+        securitySchemes: {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
     },
     security: [
         {

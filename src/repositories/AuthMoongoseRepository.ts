@@ -41,6 +41,20 @@ class AuthMongooseRepository implements IAuthRepository {
             updated_at: result.updated_at
         };
     }
+
+    async getUserById(id: string): Promise<IUser | null> {
+        const result = await UserModel.findById(id);
+        if (!result) return null;
+
+        return {
+            id: result._id.toString(),
+            name: result.name,
+            email: result.email,
+            password: result.password,
+            created_at: result.created_at,
+            updated_at: result.updated_at
+        }
+    }
 }
 
 export default AuthMongooseRepository;
