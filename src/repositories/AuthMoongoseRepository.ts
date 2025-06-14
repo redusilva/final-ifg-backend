@@ -1,14 +1,14 @@
-import { ClientSession } from 'mongoose';
 import { IAuthRepository } from '../intefaces/repositories/IAuthRepository';
 import { IUser } from '../intefaces/entities/User';
 import { UserModel } from '../models/UserMongooseModel';
 import { CreateUserValidatorType } from '../validators/UserValidator';
+import { SessionType } from '../intefaces/services/IAuthService';
 
 class AuthMongooseRepository implements IAuthRepository {
     constructor() {
 
     }
-    async getUserByEmail(email: string, session: ClientSession): Promise<IUser | null> {
+    async getUserByEmail(email: string, session: SessionType): Promise<IUser | null> {
         const result = await UserModel.findOne({ email }).session(session);
         if (!result) return null;
 
@@ -22,7 +22,7 @@ class AuthMongooseRepository implements IAuthRepository {
         }
     }
 
-    async createUser(user: CreateUserValidatorType, session: ClientSession): Promise<IUser | null> {
+    async createUser(user: CreateUserValidatorType, session: SessionType): Promise<IUser | null> {
         const newUser = new UserModel({
             name: user.name,
             email: user.email,

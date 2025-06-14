@@ -1,10 +1,12 @@
 import { CreateUserValidatorType } from "../../validators/UserValidator";
 import { IUser } from "../entities/User";
 
-export interface IAuthService {
-    getUserByEmail(email: string, session: any): Promise<IUser | null>;
+export type SessionType = any;
 
-    createUser(user: CreateUserValidatorType, session: any): Promise<{ status: number; data: IUser | null; message: string }>;
+export interface IAuthService {
+    getUserByEmail(email: string, session: SessionType): Promise<IUser | null>;
+
+    createUser(user: CreateUserValidatorType, session: SessionType): Promise<{ status: number; data: IUser | null; message: string }>;
 
     getUserById(id: string): Promise<IUser | null>;
 

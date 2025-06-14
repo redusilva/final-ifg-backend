@@ -1,7 +1,6 @@
-import { ClientSession } from 'mongoose';
 import { IAuthRepository } from '../intefaces/repositories/IAuthRepository';
 import { IUser } from '../intefaces/entities/User';
-import { IAuthService } from '../intefaces/services/IAuthService';
+import { IAuthService, SessionType } from '../intefaces/services/IAuthService';
 import { CreateUserValidatorType } from '../validators/UserValidator';
 
 interface Data {
@@ -17,12 +16,12 @@ class AuthService implements IAuthService {
         this.authRepository = authRepository;
     }
 
-    async getUserByEmail(email: string, session: ClientSession): Promise<IUser | null> {
+    async getUserByEmail(email: string, session: SessionType): Promise<IUser | null> {
         const result = await this.authRepository.getUserByEmail(email, session);
         return result;
     }
 
-    async createUser(user: CreateUserValidatorType, session: ClientSession): Promise<{ status: number; data: IUser | null; message: string }> {
+    async createUser(user: CreateUserValidatorType, session: SessionType): Promise<{ status: number; data: IUser | null; message: string }> {
         const createdUser = await this.getUserByEmail(user.email, session);
         if (createdUser) {
             return {

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const pathsDir = path.resolve(__dirname, 'paths');
+const pathsDir = path.resolve(__dirname, '../../swagger');
 
 const files = fs.readdirSync(pathsDir);
 

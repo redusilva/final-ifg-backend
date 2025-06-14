@@ -2,9 +2,8 @@ import express from 'express';
 import router from './routes';
 import { config } from './confg/env';
 import cors from 'cors';
-import { swaggerConfig } from './swagger';
+import { swaggerConfig } from './confg/swagger';
 import swaggerUi from 'swagger-ui-express';
-import { MongooseService } from './services/MongooseService';
 import { mongooseContainer } from './container/MongooseContainer';
 
 const app = express();
