@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import authRoutes from './AuthRoutes';
+import userRoutes from './paths/UserRoutes';
 
 const router = Router();
-router.use('/auth', authRoutes);
+router.use('/user', userRoutes);
 
 router.get('/', (req, res) => {
     res.send('API funcionando com Express + MongoDB + TypeScript');

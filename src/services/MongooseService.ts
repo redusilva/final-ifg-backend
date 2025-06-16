@@ -1,6 +1,7 @@
 import mongoose, { ClientSession, Connection } from 'mongoose';
+import { IDatabaseService } from '../intefaces/services/IDatabaseService';
 
-export class MongooseService {
+export class MongooseService implements IDatabaseService {
     constructor(private readonly mongoUri: string) { }
 
     async connect(): Promise<void> {
