@@ -7,7 +7,7 @@ const UserSchema = new Schema({
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 }, {
-    timestamps: true,
+    timestamps: false,
     versionKey: false
 });
 

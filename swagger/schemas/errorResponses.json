@@ -1,0 +1,38 @@
+{
+    "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string",
+                "example": "Unauthorized: No token provided"
+            }
+        },
+        "required": [
+            "message"
+        ]
+    },
+    "InternalServerError": {
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string",
+                "example": "Internal Server Error"
+            }
+        },
+        "required": [
+            "message"
+        ]
+    },
+    "OperationError": {
+        "type": "object",
+        "properties": {
+            "errors": {
+                "type": "object",
+                "description": "Validation errors"
+            }
+        },
+        "required": [
+            "message"
+        ]
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "/user": {
+        "post": {
+            "summary": "Criar usuário",
+            "description": "Este endpoint é utilizado para criar alunos e professores. Para criar alunos, envie o campo type com o valor student. Para criar professores, envie o campo type com o valor teacher.",
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BasicUser"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Usuário criado com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Usuário não autenticado!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnauthorizedError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

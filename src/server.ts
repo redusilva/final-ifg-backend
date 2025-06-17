@@ -5,16 +5,21 @@ import cors from 'cors';
 import { swaggerConfig } from './confg/swagger';
 import swaggerUi from 'swagger-ui-express';
 import { mongooseContainer } from './container/MongooseContainer';
+import authMiddleware from './middlewares/auth';
 
 const app = express();
 
 app.use(express.json());
-app.use(router);
 app.use(cors({
     origin: '*',
 }));
 
+// Public routes
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig));
+
+// Private routes
+app.use(authMiddleware);
+app.use(router);
 
 async function start() {
     try {

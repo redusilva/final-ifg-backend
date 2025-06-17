@@ -1,0 +1,69 @@
+{
+    "User": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "example": "60f7d5c8c2a4e53f8c4f0d1b"
+            },
+            "name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "email": {
+                "type": "string",
+                "format": "email"
+            },
+            "type": {
+                "type": "string",
+                "enum": [
+                    "student",
+                    "teacher"
+                ],
+                "example": "student"
+            },
+            "created_at": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "updated_at": {
+                "type": "string",
+                "format": "date-time"
+            }
+        },
+        "required": [
+            "id",
+            "name",
+            "email",
+            "type",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "BasicUser": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "email": {
+                "type": "string",
+                "format": "email"
+            },
+            "type": {
+                "type": "string",
+                "enum": [
+                    "student",
+                    "teacher"
+                ],
+                "example": "student"
+            }
+        },
+        "required": [
+            "name",
+            "email",
+            "type"
+        ]
+    }
+}

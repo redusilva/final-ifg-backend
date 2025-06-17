@@ -1,3 +1,5 @@
+import { SessionType } from "../intefaces/config/IntDatabase";
+import { IntBasicUser, IUser } from "../intefaces/entities/User";
 import { IntUserRepository } from "../intefaces/repositories/IntUserRepository";
 import { IntUserService } from "../intefaces/services/IntUserService";
 
@@ -10,6 +12,16 @@ class UserService implements IntUserService {
 
     constructor({ userRepository }: UserServiceProps) {
         this.userRepository = userRepository;
+    }
+
+    async findUserByEmail(email: string, session: SessionType): Promise<IUser | null> {
+        const currentUser = await this.userRepository.findUserByEmail(email, session);
+        return currentUser;
+    }
+
+    async createUser(user: IntBasicUser, session: SessionType): Promise<IUser | null> {
+        const newUser = await this.userRepository.createUser(user, session);
+        return newUser;
     }
 }
 
