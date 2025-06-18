@@ -2,7 +2,7 @@ import { IDatabaseService } from "../intefaces/services/IDatabaseService";
 import { IntUserService } from "../intefaces/services/IntUserService";
 import { Request, Response } from "express";
 import { IntUserValidator } from "../intefaces/validators/IntUserValidators";
-import { IntBasicUser } from "../intefaces/entities/User";
+import { IntBasicUser, IUser, UserType } from "../intefaces/entities/User";
 import { ILogService } from "../intefaces/services/ILogService";
 import { IntNotificationService } from "../intefaces/services/IntNotificationService";
 
@@ -122,6 +122,24 @@ class UserController {
             return res.status(500).json({
                 error: 'Internal Server Error'
             })
+        }
+    }
+
+    async getAll(req: Request, res: Response) {
+        try {
+            const { filterBy } = req.query;
+            const validFilters: UserType[] = ['student', 'teacher'];
+
+            const users = validFilters.includes(filterBy as UserType)
+                ? await this.userService.findAllUsersByType(filterBy as UserType, null)
+                : await this.userService.findAllUsers(null);
+
+            return res.status(200).json({ users });
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
         }
     }
 }

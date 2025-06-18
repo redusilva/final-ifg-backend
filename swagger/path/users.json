@@ -63,6 +63,68 @@
                     }
                 }
             }
+        },
+        "get": {
+            "summary": "Buscar alunos e/ou professores",
+            "description": "Este endpoint é utilizado para buscar alunos e/ou professores. Caso queira buscar apenas alunos, envie o campo filterBy com o valor student. Caso queira buscar apenas professores, envie o campo filterBy com o valor teacher. Caso queira que os 2 sejam buscados, deixe o campo filterBy vazio. Lembrando sempre que os filtros devem ser passados por query params e devem ser apenas os valores presentes na enum abaixo. Caso o valor seja diferente, o sistema retornará alunos e professores sem aplicar qualquer filtro.",
+            "tags": [
+                "User"
+            ],
+            "parameters": [
+                {
+                    "name": "filterBy",
+                    "in": "query",
+                    "description": "Filtros para buscar alunos ou professores",
+                    "required": false,
+                    "schema": {
+                        "type": "string",
+                        "enum": [
+                            "student",
+                            "teacher"
+                        ]
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "users": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Usuário não autenticado!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnauthorizedError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "/user/{id}": {
@@ -133,7 +195,7 @@
         },
         "delete": {
             "summary": "Deletar usuário",
-            "description": "Este endpoint é utilizado para deletar um aluno ou professor",
+            "description": "Este endpoint é utilizado para deletar um aluno ou professor pelo ID",
             "tags": [
                 "User"
             ],

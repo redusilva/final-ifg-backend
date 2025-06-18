@@ -1,56 +1,47 @@
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IntBasicUser, IUser } from "../intefaces/entities/User";
+import { IntBasicUser, IUser, UserType } from "../intefaces/entities/User";
 import { IntUserRepository } from "../intefaces/repositories/IntUserRepository";
 import { UserModel } from "../models/UserMongooseModel";
+import { buildUser } from "../utils/builder";
 
 class UserMongooseRepository implements IntUserRepository {
     async findUserByEmail(email: string, session: SessionType): Promise<IUser | null> {
         const user = await UserModel.findOne({ email }).session(session);
         if (!user) return null;
 
-        return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            type: user.type,
-            created_at: user.created_at,
-            updated_at: user.updated_at
-        };
+        return buildUser(user);
     }
 
     async createUser(user: IntBasicUser, session: SessionType): Promise<IUser | null> {
         const createdUser = new UserModel(user);
         await createdUser.save({ session });
 
-        return {
-            id: createdUser.id,
-            name: createdUser.name,
-            email: createdUser.email,
-            phone: createdUser.phone,
-            type: createdUser.type,
-            created_at: createdUser.created_at,
-            updated_at: createdUser.updated_at
-        };
+        return buildUser(createdUser);
     }
 
     async findUserById(id: string, session: SessionType): Promise<IUser | null> {
         const user = await UserModel.findById(id).session(session);
         if (!user) return null;
 
-        return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            type: user.type,
-            created_at: user.created_at,
-            updated_at: user.updated_at
-        };
+        return buildUser(user);
     }
 
     async deleteUserById(id: string, session: SessionType): Promise<void> {
         await UserModel.findByIdAndDelete(id).session(session);
+    }
+
+    async findAllUsers(session: SessionType): Promise<IUser[]> {
+        const users = await UserModel.find().session(session);
+        if (!users) return [];
+
+        return users.map(user => (buildUser(user)));
+    }
+
+    async findAllUsersByType(type: UserType, session: SessionType): Promise<IUser[]> {
+        const users = await UserModel.find({ type }).session(session);
+        if (!users) return [];
+
+        return users.map(user => (buildUser(user)));
     }
 }
 

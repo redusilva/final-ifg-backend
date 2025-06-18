@@ -1,5 +1,5 @@
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IntBasicUser, IUser } from "../intefaces/entities/User";
+import { IntBasicUser, IUser, UserType } from "../intefaces/entities/User";
 import { IntUserRepository } from "../intefaces/repositories/IntUserRepository";
 import { IntUserService } from "../intefaces/services/IntUserService";
 
@@ -31,6 +31,16 @@ class UserService implements IntUserService {
 
     async deleteUserById(id: string, session: SessionType): Promise<void> {
         await this.userRepository.deleteUserById(id, session);
+    }
+
+    async findAllUsers(session: SessionType): Promise<IUser[]> {
+        const users = await this.userRepository.findAllUsers(session);
+        return users;
+    }
+
+    async findAllUsersByType(type: UserType, session: SessionType): Promise<IUser[]> {
+        const users = await this.userRepository.findAllUsersByType(type, session);
+        return users;
     }
 }
 
