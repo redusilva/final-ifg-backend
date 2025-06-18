@@ -4,4 +4,6 @@ import { IntBasicUser, IUser } from "../entities/User";
 export interface IntUserRepository {
     findUserByEmail(email: string, session: SessionType): Promise<IUser | null>;
     createUser(user: IntBasicUser, session: SessionType): Promise<IUser | null>;
+    findUserById(id: string, session: SessionType): Promise<IUser | null>;
+    deleteUserById(id: string, session: SessionType): Promise<void>;
 }

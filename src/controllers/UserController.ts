@@ -37,7 +37,7 @@ class UserController {
                     errors: error
                 })
             }
-            const { name, email, type }: IntBasicUser = data;
+            const { name, email, type, phone }: IntBasicUser = data;
 
             const session = await this.databaseService.startTransaction();
             const currentUser = await this.userService.findUserByEmail(email, session);
@@ -49,7 +49,7 @@ class UserController {
                 })
             }
 
-            const user = await this.userService.createUser({ name, email, type }, session);
+            const user = await this.userService.createUser({ name, email, type, phone }, session);
             if (!user) {
                 await this.databaseService.rollbackTransaction(session);
                 return res.status(400).json({
@@ -68,6 +68,54 @@ class UserController {
 
             return res.status(201).json({
                 user
+            })
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            })
+        }
+    }
+
+    async getById(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+
+            const user = await this.userService.findUserById(id, null);
+            if (!user) {
+                return res.status(404).json({
+                    error: 'User not found'
+                })
+            }
+
+            return res.status(200).json({
+                user
+            })
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            })
+        }
+    }
+
+    async deleteById(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+
+            const user = await this.userService.findUserById(id, null);
+            if (!user) {
+                return res.status(404).json({
+                    error: 'User not found'
+                })
+            }
+
+            await this.userService.deleteUserById(id, null);
+
+            this.logService.createLog(`User ${user.name} deleted`, 'info');
+
+            return res.status(200).json({
+                message: 'User deleted'
             })
         } catch (error: any) {
             this.logService.createLog(error.message, 'error');

@@ -34,5 +34,17 @@
         "required": [
             "message"
         ]
+    },
+    "NotFoundError": {
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string",
+                "example": "Data not found"
+            }
+        },
+        "required": [
+            "message"
+        ]
     }
 }

@@ -8,6 +8,11 @@ class UserZodValidator implements IntUserValidator {
             email: z.string().email(),
             name: z.string().trim().min(2),
             type: z.enum(['student', 'teacher']),
+            phone: z.string()
+                .transform(val => val.replace(/\D/g, ''))
+                .refine(val => val.length >= 8, {
+                    message: 'Phone must have at least 8 digits considering only numeric values'
+                })
         });
 
         const result = userSchema.safeParse(data);

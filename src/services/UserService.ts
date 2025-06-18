@@ -23,6 +23,15 @@ class UserService implements IntUserService {
         const newUser = await this.userRepository.createUser(user, session);
         return newUser;
     }
+
+    async findUserById(id: string, session: SessionType): Promise<IUser | null> {
+        const currentUser = await this.userRepository.findUserById(id, session);
+        return currentUser;
+    }
+
+    async deleteUserById(id: string, session: SessionType): Promise<void> {
+        await this.userRepository.deleteUserById(id, session);
+    }
 }
 
 export default UserService;

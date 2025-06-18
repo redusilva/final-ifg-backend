@@ -12,6 +12,7 @@ class UserMongooseRepository implements IntUserRepository {
             id: user.id,
             name: user.name,
             email: user.email,
+            phone: user.phone,
             type: user.type,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -26,10 +27,30 @@ class UserMongooseRepository implements IntUserRepository {
             id: createdUser.id,
             name: createdUser.name,
             email: createdUser.email,
+            phone: createdUser.phone,
             type: createdUser.type,
             created_at: createdUser.created_at,
             updated_at: createdUser.updated_at
         };
+    }
+
+    async findUserById(id: string, session: SessionType): Promise<IUser | null> {
+        const user = await UserModel.findById(id).session(session);
+        if (!user) return null;
+
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            type: user.type,
+            created_at: user.created_at,
+            updated_at: user.updated_at
+        };
+    }
+
+    async deleteUserById(id: string, session: SessionType): Promise<void> {
+        await UserModel.findByIdAndDelete(id).session(session);
     }
 }
 
