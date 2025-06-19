@@ -1,5 +1,5 @@
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IDiscipline, IDisciplineCreate } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineCreate, IDisciplineReport } from "../intefaces/entities/Discipline";
 import { IUser } from "../intefaces/entities/User";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { IDisciplineService } from "../intefaces/services/IDisciplineService";
@@ -164,6 +164,11 @@ class DisciplineService implements IDisciplineService {
             error: null,
             data: updatedDiscipline
         };
+    }
+
+    async getAll(session?: SessionType): Promise<IDisciplineReport[]> {
+        const disciplines = await this.disciplineRepository.getAll(session);
+        return disciplines;
     }
 }
 

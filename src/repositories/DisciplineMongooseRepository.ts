@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IDiscipline, IDisciplineCreate } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineCreate, IDisciplineReport } from "../intefaces/entities/Discipline";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { DisciplineModel } from "../models/DisciplineMongooseModel";
-import { buildDiscipline } from "../utils/builder";
+import { buildDiscipline, buildDisciplineItemRepost } from "../utils/builder";
 
 class DisciplineMongooseRepository implements IDisciplineRepository {
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
@@ -76,6 +76,16 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         await discipline.save({ session });
 
         return buildDiscipline(discipline);
+    }
+
+    async getAll(session: SessionType): Promise<IDisciplineReport[]> {
+        const disciplines = await DisciplineModel
+            .find()
+            .populate('students')
+            .populate('teacher_id')
+            .session(session);
+
+        return disciplines?.map(discipline => buildDisciplineItemRepost(discipline)) || [];
     }
 }
 

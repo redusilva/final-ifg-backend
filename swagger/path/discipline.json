@@ -48,6 +48,35 @@
                     }
                 }
             }
+        },
+        "get": {
+            "summary": "Busca todas as disciplinas",
+            "description": "Este endpoint é utilizado para buscar todas as disciplinas cadastradas no sistema com seus respectivos professores e alunos",
+            "tags": [
+                "Disciplina"
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DisciplineReport"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "/discipline/{disciplineId}/students/{studentId}": {

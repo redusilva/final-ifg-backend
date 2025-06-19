@@ -83,5 +83,51 @@
             "name",
             "description"
         ]
+    },
+    "DisciplineReport": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "description": {
+                "type": "string",
+                "format": "email"
+            },
+            "teacher": {
+                "type": "object",
+                "$ref": "#/components/schemas/User"
+            },
+            "students": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User"
+                }
+            },
+            "schedule": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                }
+            },
+            "created_at": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "updated_at": {
+                "type": "string",
+                "format": "date-time"
+            }
+        },
+        "required": [
+            "name",
+            "description"
+        ]
     }
 }

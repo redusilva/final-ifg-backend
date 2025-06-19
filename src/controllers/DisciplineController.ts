@@ -201,6 +201,18 @@ class DisciplineController {
             });
         }
     }
+
+    async getAll(req: any, res: any) {
+        try {
+            const result = await this.disciplineService.getAll();
+            return res.status(200).json(result);
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 export default DisciplineController;

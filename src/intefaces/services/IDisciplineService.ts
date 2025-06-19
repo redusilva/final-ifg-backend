@@ -1,5 +1,5 @@
 import { SessionType } from "../config/IntDatabase";
-import { IDiscipline, IDisciplineCreate } from "../entities/Discipline";
+import { IDiscipline, IDisciplineCreate, IDisciplineReport } from "../entities/Discipline";
 import { IUser } from "../entities/User";
 import { BasicServiceResponse } from "../types";
 
@@ -12,4 +12,5 @@ export interface IDisciplineService {
     unsubscribeStudentFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
     subscribeTeacherToDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
     unsubscribeTeacherFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
+    getAll(session?: SessionType): Promise<IDisciplineReport[]>;
 }

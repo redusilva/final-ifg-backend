@@ -1,5 +1,5 @@
 import { SessionType } from "../config/IntDatabase";
-import { IDisciplineCreate, IDiscipline } from "../entities/Discipline";
+import { IDisciplineCreate, IDiscipline, IDisciplineReport } from "../entities/Discipline";
 
 export interface IDisciplineRepository {
     create(data: IDisciplineCreate): Promise<IDiscipline>;
@@ -8,4 +8,5 @@ export interface IDisciplineRepository {
     unsubscribeStudentFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     subscribeTeacherToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     unsubscribeTeacherFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
+    getAll(session?: SessionType): Promise<IDisciplineReport[]>;
 }
