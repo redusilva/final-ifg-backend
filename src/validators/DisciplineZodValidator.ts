@@ -1,6 +1,7 @@
 import { IntDisciplineValidator } from "../intefaces/validators/IntDisciplineValidator";
 import z from "zod";
 import { IntValidatorsResponse } from "../intefaces/validators/IntValidatorsResponse";
+import { mongoIdRegex } from "../utils/enum";
 
 export class DisciplineZodValidator implements IntDisciplineValidator {
     validateCreateDiscipline(data: any): IntValidatorsResponse {
@@ -35,6 +36,39 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
             success: true,
             error: null,
             data: formattedData
+        }
+    }
+
+    validateRegisterStudents(data: any): IntValidatorsResponse {
+        const RegisterStudentsSchema = z.object({
+            studentId: z.string({
+                required_error: 'Student ID is required',
+                invalid_type_error: 'Student ID must be a string'
+            })
+                .min(1, 'Student ID cannot be empty')
+                .regex(mongoIdRegex, 'Student ID must be a valid MongoDB ObjectId'),
+
+            disciplineId: z.string({
+                required_error: 'Discipline ID is required',
+                invalid_type_error: 'Discipline ID must be a string'
+            })
+                .min(1, 'Discipline ID cannot be empty')
+                .regex(mongoIdRegex, 'Discipline ID must be a valid MongoDB ObjectId')
+        });
+
+        const result = RegisterStudentsSchema.safeParse(data);
+        if (!result.success) {
+            return {
+                success: false,
+                error: result.error,
+                data: null
+            }
+        }
+
+        return {
+            success: true,
+            error: null,
+            data: result.data
         }
     }
 }

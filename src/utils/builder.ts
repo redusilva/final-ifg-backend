@@ -19,7 +19,7 @@ export const buildDiscipline = (data: any): IDiscipline => {
         teacher_id: data?.teacher_id?.toString() || null,
         students: data?.students.map((student_id: any) => student_id.toString()) || [],
         schedule: data?.schedule || [],
-        created_at: data.created_at,
-        updated_at: data.updated_at
+        created_at: data?.created_at,
+        updated_at: data?.updated_at
     }
 }

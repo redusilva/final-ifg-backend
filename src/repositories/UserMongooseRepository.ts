@@ -22,7 +22,6 @@ class UserMongooseRepository implements IntUserRepository {
     async findUserById(id: string, session: SessionType): Promise<IUser | null> {
         const user = await UserModel.findById(id).session(session);
         if (!user) return null;
-
         return buildUser(user);
     }
 

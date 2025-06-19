@@ -4,7 +4,7 @@
             "summary": "Criar usuário",
             "description": "Este endpoint é utilizado para criar alunos e professores. Para criar alunos, envie o campo type com o valor student. Para criar professores, envie o campo type com o valor teacher.",
             "tags": [
-                "User"
+                "Usuário"
             ],
             "requestBody": {
                 "required": true,
@@ -24,7 +24,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user": {
+                                    "Usuário": {
                                         "$ref": "#/components/schemas/User"
                                     }
                                 }
@@ -68,7 +68,7 @@
             "summary": "Buscar alunos e/ou professores",
             "description": "Este endpoint é utilizado para buscar alunos e/ou professores. Caso queira buscar apenas alunos, envie o campo filterBy com o valor student. Caso queira buscar apenas professores, envie o campo filterBy com o valor teacher. Caso queira que os 2 sejam buscados, deixe o campo filterBy vazio. Lembrando sempre que os filtros devem ser passados por query params e devem ser apenas os valores presentes na enum abaixo. Caso o valor seja diferente, o sistema retornará alunos e professores sem aplicar qualquer filtro.",
             "tags": [
-                "User"
+                "Usuário"
             ],
             "parameters": [
                 {
@@ -132,7 +132,7 @@
             "summary": "Buscar usuário por ID",
             "description": "Este endpoint é utilizado para buscar um aluno ou professor por ID",
             "tags": [
-                "User"
+                "Usuário"
             ],
             "parameters": [
                 {
@@ -153,7 +153,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user": {
+                                    "Usuário": {
                                         "$ref": "#/components/schemas/User"
                                     }
                                 }
@@ -197,7 +197,7 @@
             "summary": "Deletar usuário",
             "description": "Este endpoint é utilizado para deletar um aluno ou professor pelo ID",
             "tags": [
-                "User"
+                "Usuário"
             ],
             "parameters": [
                 {

@@ -2,4 +2,5 @@ import { IntValidatorsResponse } from "./IntValidatorsResponse";
 
 export interface IntDisciplineValidator {
     validateCreateDiscipline: (data: any) => IntValidatorsResponse;
+    validateRegisterStudents: (data: any) => IntValidatorsResponse
 }
