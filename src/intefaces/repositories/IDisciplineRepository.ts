@@ -6,4 +6,6 @@ export interface IDisciplineRepository {
     findById(id: string): Promise<IDiscipline | null>;
     subscribeStudentToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     unsubscribeStudentFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
+    subscribeTeacherToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
+    unsubscribeTeacherFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
 }

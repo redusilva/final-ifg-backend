@@ -51,6 +51,32 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
 
         return buildDiscipline(discipline);
     }
+
+    async subscribeTeacherToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline> {
+        const discipline = await DisciplineModel.findById(disciplineId).session(session);
+        if (!discipline) {
+            throw new Error('Discipline not found');
+        }
+
+        discipline.teacher_id = userId;
+
+        await discipline.save({ session });
+
+        return buildDiscipline(discipline);
+    }
+
+    async unsubscribeTeacherFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline> {
+        const discipline = await DisciplineModel.findById(disciplineId).session(session);
+        if (!discipline) {
+            throw new Error('Discipline not found');
+        }
+
+        discipline.teacher_id = null;
+
+        await discipline.save({ session });
+
+        return buildDiscipline(discipline);
+    }
 }
 
 export { DisciplineMongooseRepository };

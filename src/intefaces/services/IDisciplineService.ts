@@ -10,4 +10,6 @@ export interface IDisciplineService {
     findById(id: string, session: SessionType): Promise<IDiscipline | null>;
     subscribeStudentToDiscipline(disciplineId: string, data: IUser, session: SessionType): Promise<BasicServiceResponse>;
     unsubscribeStudentFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
+    subscribeTeacherToDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
+    unsubscribeTeacherFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
 }

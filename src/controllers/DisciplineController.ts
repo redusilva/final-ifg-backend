@@ -51,7 +51,6 @@ class DisciplineController {
     }
 
     async registerStudents(req: any, res: any) {
-        const session = await this.databaseService.startTransaction();
         try {
             const { success, error, data } = this.validator.validateRegisterStudents(req.params);
             if (!success) {
@@ -65,27 +64,24 @@ class DisciplineController {
                 disciplineId
             } = data;
 
-            const user = await this.userService.findUserById(userId, session);
+            const user = await this.userService.findUserById(userId, null);
             if (!user) {
                 return res.status(404).json({
                     error: 'User not found'
                 });
             }
 
-            const result = await this.disciplineService.subscribeStudentToDiscipline(disciplineId, user, session);
+            const result = await this.disciplineService.subscribeStudentToDiscipline(disciplineId, user, null);
             if (result.status !== 200) {
                 return res.status(result.status).json({
                     errors: [result.error]
                 });
             }
 
-            await this.databaseService.commitTransaction(session);
-
             this.notificationService.sendNotification(`O aluno ${user.name} foi inscrito na disciplina ${result.data.name}`);
 
             return res.status(200).json(result.data);
         } catch (error: any) {
-            await this.databaseService.rollbackTransaction(session);
             this.logService.createLog(error.message, 'error');
             return res.status(500).json({
                 error: 'Internal Server Error'
@@ -94,7 +90,6 @@ class DisciplineController {
     }
 
     async removeStudent(req: any, res: any) {
-        const session = await this.databaseService.startTransaction();
         try {
             const { success, error, data } = this.validator.validateRegisterStudents(req.params);
             if (!success) {
@@ -108,27 +103,98 @@ class DisciplineController {
                 disciplineId
             } = data;
 
-            const user = await this.userService.findUserById(userId, session);
+            const user = await this.userService.findUserById(userId, null);
             if (!user) {
                 return res.status(404).json({
                     error: 'User not found'
                 });
             }
 
-            const result = await this.disciplineService.unsubscribeStudentFromDiscipline(disciplineId, user, session);
+            const result = await this.disciplineService.unsubscribeStudentFromDiscipline(disciplineId, user, null);
             if (result.status !== 200) {
                 return res.status(result.status).json({
                     errors: [result.error]
                 });
             }
 
-            await this.databaseService.commitTransaction(session);
-
             this.notificationService.sendNotification(`O aluno ${user.name} foi removido da disciplina ${result.data.name}`);
 
             return res.status(200).json(result.data);
         } catch (error: any) {
-            await this.databaseService.rollbackTransaction(session);
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async registerTeacher(req: any, res: any) {
+        try {
+            const { success, error, data } = this.validator.validateRegisterTeacher(req.params);
+            if (!success) {
+                return res.status(400).json({
+                    errors: error
+                });
+            }
+
+            const {
+                teacherId: userId,
+                disciplineId
+            } = data;
+
+            const user = await this.userService.findUserById(userId, null);
+            if (!user) {
+                return res.status(404).json({
+                    error: 'User not found'
+                });
+            }
+
+            const result = await this.disciplineService.subscribeTeacherToDiscipline(disciplineId, user, null);
+            if (result.status !== 200) {
+                return res.status(result.status).json({
+                    errors: [result.error]
+                });
+            }
+
+            return res.status(200).json(result.data);
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async removeTeacher(req: any, res: any) {
+        try {
+            const { success, error, data } = this.validator.validateRegisterTeacher(req.params);
+            if (!success) {
+                return res.status(400).json({
+                    errors: error
+                });
+            }
+
+            const {
+                teacherId: userId,
+                disciplineId
+            } = data;
+
+            const user = await this.userService.findUserById(userId, null);
+            if (!user) {
+                return res.status(404).json({
+                    error: 'User not found'
+                });
+            }
+
+            const result = await this.disciplineService.unsubscribeTeacherFromDiscipline(disciplineId, user, null);
+            if (result.status !== 200) {
+                return res.status(result.status).json({
+                    errors: [result.error]
+                });
+            }
+
+            return res.status(200).json(result.data);
+        } catch (error: any) {
             this.logService.createLog(error.message, 'error');
             return res.status(500).json({
                 error: 'Internal Server Error'

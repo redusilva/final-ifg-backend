@@ -71,4 +71,37 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
             data: result.data
         }
     }
+
+    validateRegisterTeacher(data: any): IntValidatorsResponse {
+        const RegisterTeacherSchema = z.object({
+            teacherId: z.string({
+                required_error: 'Teacher ID is required',
+                invalid_type_error: 'Teacher ID must be a string'
+            })
+                .min(1, 'Teacher ID cannot be empty')
+                .regex(mongoIdRegex, 'Teacher ID must be a valid MongoDB ObjectId'),
+
+            disciplineId: z.string({
+                required_error: 'Discipline ID is required',
+                invalid_type_error: 'Discipline ID must be a string'
+            })
+                .min(1, 'Discipline ID cannot be empty')
+                .regex(mongoIdRegex, 'Discipline ID must be a valid MongoDB ObjectId')
+        });
+
+        const result = RegisterTeacherSchema.safeParse(data);
+        if (!result.success) {
+            return {
+                success: false,
+                error: result.error,
+                data: null
+            }
+        }
+
+        return {
+            success: true,
+            error: null,
+            data: result.data
+        }
+    }
 }

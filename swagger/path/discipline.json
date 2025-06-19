@@ -189,5 +189,145 @@
                 }
             }
         }
+    },
+    "/discipline/{disciplineId}/teachers/{teacherId}": {
+        "post": {
+            "summary": "Inscrever professor na disciplina",
+            "description": "Este endpoint é utilizado para vincular professores a disciplina",
+            "tags": [
+                "Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "disciplineId",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "teacherId",
+                    "in": "path",
+                    "description": "ID do professor",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Discipline"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Disciplina ou aluno não encontrado!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotFoundError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "Remove professor da disciplina",
+            "description": "Este endpoint é utilizado para remover o vínculo entre professor e disciplina",
+            "tags": [
+                "Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "disciplineId",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "studentId",
+                    "in": "path",
+                    "description": "ID do professor",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Discipline"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Disciplina ou aluno não encontrado!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotFoundError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -95,6 +95,76 @@ class DisciplineService implements IDisciplineService {
             data: updatedDiscipline
         };
     }
+
+    async subscribeTeacherToDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse> {
+        const discipline = await this.findById(disciplineId, session);
+        if (!discipline) {
+            return {
+                status: 404,
+                error: 'Discipline not found',
+                data: null
+            }
+        }
+
+        if (user.type !== 'teacher') {
+            return {
+                status: 400,
+                error: 'User is not a teacher',
+                data: null
+            }
+        }
+
+        const alreadySubscribed = discipline.teacher_id === user.id;
+        if (alreadySubscribed) {
+            return {
+                status: 400,
+                error: 'User is already subscribed to this discipline',
+                data: null
+            }
+        }
+
+        const updatedDiscipline = await this.disciplineRepository.subscribeTeacherToDiscipline(disciplineId, user.id, session);
+        return {
+            status: 200,
+            error: null,
+            data: updatedDiscipline
+        };
+    }
+
+    async unsubscribeTeacherFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse> {
+        const discipline = await this.findById(disciplineId, session);
+        if (!discipline) {
+            return {
+                status: 404,
+                error: 'Discipline not found',
+                data: null
+            }
+        }
+
+        if (user.type !== 'teacher') {
+            return {
+                status: 400,
+                error: 'User is not a teacher',
+                data: null
+            }
+        }
+
+        const alreadySubscribed = discipline.teacher_id === user.id;
+        if (!alreadySubscribed) {
+            return {
+                status: 400,
+                error: 'User is not subscribed to this discipline',
+                data: null
+            }
+        }
+
+        const updatedDiscipline = await this.disciplineRepository.unsubscribeTeacherFromDiscipline(disciplineId, user.id, session);
+        return {
+            status: 200,
+            error: null,
+            data: updatedDiscipline
+        };
+    }
 }
 
 export { DisciplineService };
