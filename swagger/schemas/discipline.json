@@ -1,0 +1,87 @@
+{
+    "BasicDiscipline": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "description": {
+                "type": "string",
+                "format": "email"
+            }
+        },
+        "required": [
+            "name",
+            "description"
+        ]
+    },
+    "Schedule": {
+        "type": "object",
+        "properties": {
+            "day_of_week": {
+                "type": "number",
+                "example": 0
+            },
+            "start_time": {
+                "type": "string",
+                "example": "HH:mm"
+            },
+            "end_time": {
+                "type": "string",
+                "example": "HH:mm"
+            }
+        },
+        "required": [
+            "day_of_week",
+            "start_time",
+            "end_time"
+        ]
+    },
+    "Discipline": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "description": {
+                "type": "string",
+                "format": "email"
+            },
+            "teacher_id": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "students": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uuid"
+                }
+            },
+            "schedule": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                }
+            },
+            "created_at": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "updated_at": {
+                "type": "string",
+                "format": "date-time"
+            }
+        },
+        "required": [
+            "name",
+            "description"
+        ]
+    }
+}

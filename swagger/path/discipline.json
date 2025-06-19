@@ -1,0 +1,53 @@
+{
+    "/discipline": {
+        "post": {
+            "summary": "Criar disciplina",
+            "description": "Este endpoint é utilizado para cadastrar disciplinas. <br /> <br /> OBS: Essa rota permite criar apenas a disciplina, sem vincular professores ou alunos, então na resposta os campos 'students', 'teacher_id' e 'schedule' sempre virão vazios ou nulos.",
+            "tags": [
+                "Disciplina"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BasicDiscipline"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Discipline"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
