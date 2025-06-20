@@ -170,6 +170,10 @@ class DisciplineService implements IDisciplineService {
         const disciplines = await this.disciplineRepository.getAll(session);
         return disciplines;
     }
+
+    async deleteById(id: string, session: SessionType): Promise<void> {
+        await this.disciplineRepository.deleteById(id, session);
+    }
 }
 
 export { DisciplineService };

@@ -9,4 +9,5 @@ export interface IDisciplineRepository {
     subscribeTeacherToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     unsubscribeTeacherFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     getAll(session?: SessionType): Promise<IDisciplineReport[]>;
+    deleteById(id: string, session: SessionType): Promise<void>;
 }

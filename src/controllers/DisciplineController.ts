@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IDatabaseService } from "../intefaces/services/IDatabaseService";
 import { IDisciplineService } from "../intefaces/services/IDisciplineService";
 import { ILogService } from "../intefaces/services/ILogService";
@@ -205,6 +206,53 @@ class DisciplineController {
     async getAll(req: any, res: any) {
         try {
             const result = await this.disciplineService.getAll();
+            return res.status(200).json(result);
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async deleteById(req: any, res: any) {
+        try {
+            const { id } = req.params;
+            const session = await mongoose.startSession();
+
+            session.startTransaction();
+
+            try {
+                await this.disciplineService.deleteById(id, session);
+                await session.commitTransaction();
+            } catch (error) {
+                await session.abortTransaction();
+            } finally {
+                await session.endSession();
+            }
+
+            return res.status(200).json({
+                message: "Disciplina deletada com sucesso!"
+            });
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async getById(req: any, res: any) {
+        try {
+            const { id } = req.params;
+
+            const result = await this.disciplineService.findById(id, null);
+            if (!result) {
+                return res.status(404).json({
+                    error: 'Discipline not found'
+                });
+            }
+
             return res.status(200).json(result);
         } catch (error: any) {
             this.logService.createLog(error.message, 'error');

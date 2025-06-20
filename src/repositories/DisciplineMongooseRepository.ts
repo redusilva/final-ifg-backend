@@ -87,6 +87,10 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
 
         return disciplines?.map(discipline => buildDisciplineItemRepost(discipline)) || [];
     }
+
+    async deleteById(id: string, session: SessionType): Promise<void> {
+        await DisciplineModel.findByIdAndDelete(id).session(session);
+    }
 }
 
 export { DisciplineMongooseRepository };

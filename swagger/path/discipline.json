@@ -79,6 +79,104 @@
             }
         }
     },
+    "/discipline/{id}": {
+        "delete": {
+            "summary": "Deletar disciplina",
+            "description": "Este endpoint é utilizado para deletar uma disciplina pelo ID",
+            "tags": [
+                "Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Disciplina deletada com sucesso!"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "Busca disciplina por id",
+            "description": "Este endpoint é utilizado para buscar uma disciplina pelo ID",
+            "tags": [
+                "Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Discipline"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Disciplina não encontrada",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotFoundError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "/discipline/{disciplineId}/students/{studentId}": {
         "post": {
             "summary": "Inscrever aluno na disciplina",

@@ -13,4 +13,5 @@ export interface IDisciplineService {
     subscribeTeacherToDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
     unsubscribeTeacherFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse>;
     getAll(session?: SessionType): Promise<IDisciplineReport[]>;
+    deleteById(id: string, session: SessionType): Promise<void>;
 }
