@@ -1,5 +1,5 @@
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IDiscipline, IDisciplineCreate, IDisciplineReport } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineCreate, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
 import { IUser } from "../intefaces/entities/User";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { IDisciplineService } from "../intefaces/services/IDisciplineService";
@@ -173,6 +173,67 @@ class DisciplineService implements IDisciplineService {
 
     async deleteById(id: string, session: SessionType): Promise<void> {
         await this.disciplineRepository.deleteById(id, session);
+    }
+
+    async createSchedule(id: string, data: Schedule, session: SessionType): Promise<BasicServiceResponse> {
+        const discipline = await this.disciplineRepository.findById(id);
+        if (!discipline) {
+            return {
+                status: 404,
+                data: null,
+                error: "Discipline not found"
+            }
+        }
+
+        if (discipline.schedule) {
+            return {
+                status: 400,
+                data: null,
+                error: "Schedule already created"
+            }
+        }
+
+        const updatedDiscipline = await this.disciplineRepository.createSchedule(
+            id,
+            data,
+            session
+        )
+        if (!updatedDiscipline) {
+            throw new Error("Discipline not updated");
+        }
+
+        return {
+            status: 200,
+            data: updatedDiscipline,
+            error: null
+        }
+    }
+
+    async deleteSchedule(id: string, session: SessionType): Promise<BasicServiceResponse> {
+        const discipline = await this.findById(id, session);
+        if (!discipline) {
+            return {
+                status: 404,
+                data: null,
+                error: "Discipline not found"
+            }
+        }
+
+        if (!discipline.schedule) {
+            return {
+                status: 400,
+                data: null,
+                error: "Schedule already deleted"
+            }
+        }
+
+        await this.disciplineRepository.deleteSchedule(id, session);
+
+        return {
+            status: 200,
+            data: null,
+            error: null
+        }
     }
 }
 

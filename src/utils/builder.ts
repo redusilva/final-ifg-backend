@@ -1,4 +1,4 @@
-import { IDiscipline, IDisciplineReport } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
 import { IUser } from "../intefaces/entities/User";
 
 export const buildUser = (user: any): IUser => ({
@@ -18,7 +18,7 @@ export const buildDiscipline = (data: any): IDiscipline => {
         description: data?.description,
         teacher_id: data?.teacher_id?.toString() || null,
         students: data?.students.map((student_id: any) => student_id.toString()) || [],
-        schedule: data?.schedule || [],
+        schedule: data?.schedule || null,
         created_at: data?.created_at,
         updated_at: data?.updated_at
     }
@@ -29,10 +29,18 @@ export const buildDisciplineItemRepost = (data: any): IDisciplineReport => {
         id: data?._id.toString(),
         name: data?.name,
         description: data?.description,
-        schedule: data?.schedule || [],
+        schedule: data?.schedule || null,
         teacher: buildUser(data?.teacher_id) || null,
         students: data?.students.map((student: any) => buildUser(student)) || [],
         created_at: data?.created_at,
         updated_at: data?.updated_at
+    }
+}
+
+export const buildSchedule = (data: any): Schedule => {
+    return {
+        day_of_week: data?.day_of_week,
+        start_time: data?.start_time,
+        end_time: data?.end_time
     }
 }

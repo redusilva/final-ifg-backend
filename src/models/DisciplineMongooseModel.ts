@@ -38,7 +38,7 @@ const DisciplineSchema = new Schema({
             ref: 'User'
         }
     ],
-    schedule: [ScheduleSchema],
+    schedule: ScheduleSchema,
     created_at: {
         type: Date,
         default: Date.now

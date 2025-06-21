@@ -29,7 +29,7 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
             ...result.data,
             teacher_id: null,
             students: [],
-            schedule: []
+            schedule: null
         }
 
         return {
@@ -90,6 +90,30 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
         });
 
         const result = RegisterTeacherSchema.safeParse(data);
+        if (!result.success) {
+            return {
+                success: false,
+                error: result.error,
+                data: null
+            }
+        }
+
+        return {
+            success: true,
+            error: null,
+            data: result.data
+        }
+    }
+
+    validateRegisterSchedule(data: any): IntValidatorsResponse {
+        const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        const RegisterScheduleSchema = z.object({
+            day_of_week: z.number().min(0).max(6),
+            start_time: z.string().regex(timeRegex, { message: 'start_time must be in HH:mm format' }),
+            end_time: z.string().regex(timeRegex, { message: 'end_time must be in HH:mm format' })
+        });
+
+        const result = RegisterScheduleSchema.safeParse(data);
         if (!result.success) {
             return {
                 success: false,

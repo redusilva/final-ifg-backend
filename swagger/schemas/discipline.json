@@ -65,10 +65,7 @@
                 }
             },
             "schedule": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/Schedule"
-                }
+                "$ref": "#/components/schemas/Schedule"
             },
             "created_at": {
                 "type": "string",
@@ -111,10 +108,7 @@
                 }
             },
             "schedule": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/Schedule"
-                }
+                "$ref": "#/components/schemas/Schedule"
             },
             "created_at": {
                 "type": "string",

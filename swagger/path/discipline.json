@@ -456,5 +456,122 @@
                 }
             }
         }
+    },
+    "/discipline/schedule/{id}": {
+        "post": {
+            "summary": "Criar horário de aula",
+            "description": "Este endpoint é utilizado para cadastrar o horário e o dia de aula da disciplina. Os dados requeridos para tal ação são: day_of_week (dia da semana, sendo um valor númerico começando a partir de 0 (domingo) até 6 (sábado), start_time (horário que se inicia a aula com o formato HH:mm) e end_time (horário que se finaliza a aula com o formato HH:mm).",
+            "tags": [
+                "Horário da Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Schedule"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Schedule"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "Deletar horário de aula",
+            "description": "Este endpoint é utilizado para deletar o horário e o dia de aula da disciplina",
+            "tags": [
+                "Horário da Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

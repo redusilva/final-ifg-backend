@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IDiscipline, IDisciplineCreate, IDisciplineReport } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineCreate, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { DisciplineModel } from "../models/DisciplineMongooseModel";
-import { buildDiscipline, buildDisciplineItemRepost } from "../utils/builder";
+import { buildDiscipline, buildDisciplineItemRepost, buildSchedule } from "../utils/builder";
 
 class DisciplineMongooseRepository implements IDisciplineRepository {
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
@@ -90,6 +90,29 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
 
     async deleteById(id: string, session: SessionType): Promise<void> {
         await DisciplineModel.findByIdAndDelete(id).session(session);
+    }
+
+    async createSchedule(id: string, data: Schedule, session: SessionType): Promise<Schedule> {
+        const discipline = await DisciplineModel.findById(id).session(session);
+        if (!discipline) {
+            throw new Error("Discipline not found")
+        }
+
+        discipline.schedule = data;
+
+        await discipline?.save({ session })
+        return buildSchedule(discipline.schedule);
+    }
+
+    async deleteSchedule(id: string, session: SessionType): Promise<void> {
+        const discipline = await DisciplineModel.findById(id).session(session);
+        if (!discipline) {
+            throw new Error("Discipline not found")
+        }
+
+        discipline.schedule = null;
+
+        await discipline.save({ session })
     }
 }
 

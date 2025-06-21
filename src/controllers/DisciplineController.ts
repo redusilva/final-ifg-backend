@@ -261,6 +261,57 @@ class DisciplineController {
             });
         }
     }
+
+    async createSchedule(req: any, res: any) {
+        try {
+            const { id } = req.params;
+            const { success, error, data } = this.validator.validateRegisterSchedule(req.body);
+
+            if (!success) {
+                return res.status(400).json({
+                    errors: error
+                });
+            }
+
+            const result = await this.disciplineService.createSchedule(id, data, null);
+            if (result.status === 200) {
+                return res.status(200).json(result.data);
+            }
+
+            return res.status(result.status).json({
+                errors: { error: result.error }
+            });
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async deleteSchedule(req: any, res: any) {
+        try {
+            const { id } = req.params;
+
+            const result = await this.disciplineService.deleteSchedule(id, null);
+            if (result.status === 200) {
+                return res.status(200).json({
+                    message: 'Schedule deleted'
+                });
+            }
+
+            return res.status(result.status).json({
+                errors: {
+                    error: result.error
+                }
+            });
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 export default DisciplineController;
