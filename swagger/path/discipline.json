@@ -182,7 +182,7 @@
             "summary": "Inscrever aluno na disciplina",
             "description": "Este endpoint é utilizado para vincular alunos a disciplina",
             "tags": [
-                "Disciplina"
+                "Relacionamento aluno/disciplina"
             ],
             "parameters": [
                 {
@@ -251,7 +251,7 @@
             "summary": "Remove aluno da disciplina",
             "description": "Este endpoint é utilizado para remover o vínculo entre aluno e disciplina",
             "tags": [
-                "Disciplina"
+                "Relacionamento aluno/disciplina"
             ],
             "parameters": [
                 {
@@ -322,7 +322,7 @@
             "summary": "Inscrever professor na disciplina",
             "description": "Este endpoint é utilizado para vincular professores a disciplina",
             "tags": [
-                "Disciplina"
+                "Relacionamento professor/disciplina"
             ],
             "parameters": [
                 {
@@ -391,7 +391,7 @@
             "summary": "Remove professor da disciplina",
             "description": "Este endpoint é utilizado para remover o vínculo entre professor e disciplina",
             "tags": [
-                "Disciplina"
+                "Relacionamento professor/disciplina"
             ],
             "parameters": [
                 {
