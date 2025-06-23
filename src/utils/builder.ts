@@ -1,5 +1,7 @@
 import { IDiscipline, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
+import { ILocation } from "../intefaces/entities/Location";
 import { IUser } from "../intefaces/entities/User";
+import { BasicServiceResponse } from "../intefaces/types";
 
 export const buildUser = (user: any): IUser => ({
     id: user?.id,
@@ -42,5 +44,25 @@ export const buildSchedule = (data: any): Schedule => {
         day_of_week: data?.day_of_week,
         start_time: data?.start_time,
         end_time: data?.end_time
+    }
+}
+
+export const buildServiceResponse = (status: number, error: string | null, data: any): BasicServiceResponse => {
+    return {
+        status,
+        error,
+        data
+    };
+}
+
+export const buildLocation = (location: any): ILocation => {
+    return {
+        id: location.id,
+        name: location.name,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        min_distance: location.min_distance,
+        created_at: location.created_at,
+        updated_at: location.updated_at,
     }
 }
