@@ -1,0 +1,71 @@
+{
+    "BasicLocation": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "example": "Sala 1"
+            },
+            "latitude": {
+                "type": "string",
+                "example": "30580284590488"
+            },
+            "longitude": {
+                "type": "string",
+                "example": "3805809354535"
+            },
+            "min_distance": {
+                "type": "number",
+                "example": 10
+            }
+        },
+        "required": [
+            "name",
+            "latitude",
+            "longitude",
+            "min_distance"
+        ]
+    },
+    "Location": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "name": {
+                "type": "string",
+                "example": "Sala 1"
+            },
+            "latitude": {
+                "type": "string",
+                "example": "30580284590488"
+            },
+            "longitude": {
+                "type": "string",
+                "example": "3805809354535"
+            },
+            "min_distance": {
+                "type": "number",
+                "example": 10
+            },
+            "created_at": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "updated_at": {
+                "type": "string",
+                "format": "date-time"
+            }
+        },
+        "required": [
+            "id",
+            "name",
+            "latitude",
+            "longitude",
+            "min_distance",
+            "created_at",
+            "updated_at"
+        ]
+    }
+}

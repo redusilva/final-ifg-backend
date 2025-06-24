@@ -1,0 +1,63 @@
+{
+    "/location": {
+        "post": {
+            "summary": "Criar sala de aula",
+            "description": "Este endpoint é utilizado para cadastrar salas de aula e/ou laboratórios. Para criar as salas, envio os campos requeridos no corpo da requisição. <br/><br/> OBS: O campo 'min_distance' é a distância mínima que aquele aluno precisa estar da sala de aula para poder computar presença pra ele.",
+            "tags": [
+                "Salas"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BasicLocation"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Dado criado com sucesso!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Location"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Usuário não autenticado!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnauthorizedError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
