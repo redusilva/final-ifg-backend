@@ -29,6 +29,11 @@ class LocationService implements ILocationService {
 
         return buildServiceResponse(201, null, location);
     }
+
+    async getAll(session?: SessionType): Promise<ILocation[]> {
+        const locations = await this.locationRepository.getAll(session);
+        return locations || [];
+    }
 }
 
 export default LocationService;

@@ -35,7 +35,6 @@ class LocationExpressController implements ILocationController {
                 return res.status(201).json(result.data);
             }
 
-            // TODO: Implementar swagger
             return res.status(result.status as number).json({
                 errors: { error: result.error }
             });
@@ -45,6 +44,18 @@ class LocationExpressController implements ILocationController {
             return res.status(500).json({
                 error: 'Internal Server Error'
             })
+        }
+    }
+
+    async getAll(req: Request, res: Response): Promise<any> {
+        try {
+            const result = await this.locationService.getAll(null);
+            return res.status(200).json(result);
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
         }
     }
 }

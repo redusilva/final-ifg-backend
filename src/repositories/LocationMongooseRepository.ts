@@ -16,6 +16,11 @@ class LocationMongooseRepository implements ILocationRepository {
 
         return buildLocation(location);
     }
+
+    async getAll(session: SessionType): Promise<ILocation[]> {
+        const locations = await LocationModel.find().session(session) || [];
+        return locations.map(buildLocation);
+    }
 }
 
 export default LocationMongooseRepository;

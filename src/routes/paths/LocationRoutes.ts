@@ -9,4 +9,9 @@ router.post(
     (req, res): Promise<any> => locationController.createLocation(req, res)
 );
 
+router.get(
+    '/',
+    (req, res): Promise<any> => locationController.getAll(req, res)
+)
+
 export default router;
