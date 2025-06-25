@@ -1,5 +1,6 @@
 import { SessionType } from "../intefaces/config/IntDatabase";
 import { ILocationCreate, ILocation } from "../intefaces/entities/Location";
+import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { ILocationRepository } from "../intefaces/repositories/ILocationRepository";
 import { ILocationService } from "../intefaces/services/ILocationService";
 import { BasicServiceResponse } from "../intefaces/types";
@@ -7,6 +8,7 @@ import { buildServiceResponse } from "../utils/builder";
 
 interface Props {
     locationRepository: ILocationRepository;
+    disciplineRepository: IDisciplineRepository;
 }
 
 class LocationService implements ILocationService {
@@ -33,6 +35,27 @@ class LocationService implements ILocationService {
     async getAll(session?: SessionType): Promise<ILocation[]> {
         const locations = await this.locationRepository.getAll(session);
         return locations || [];
+    }
+
+    async findById(id: string, session?: SessionType): Promise<ILocation | null> {
+        const location = await this.locationRepository.findById(id, session);
+        return location;
+    }
+
+    async deleteById(id: string, session: SessionType): Promise<BasicServiceResponse> {
+
+        const location = await this.locationRepository.findById(id, session);
+        if (!location) {
+            return buildServiceResponse(404, "Location not found", null);
+        }
+
+        await this.locationRepository.deleteById(id, session);
+
+        return buildServiceResponse(
+            200,
+            "Operação realizada com sucesso!",
+            null
+        );
     }
 }
 

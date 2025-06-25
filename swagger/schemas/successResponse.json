@@ -1,0 +1,14 @@
+{
+    "SimpleSuccessMessage": {
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string",
+                "example": "Operação realizada com sucesso!"
+            }
+        },
+        "required": [
+            "message"
+        ]
+    }
+}

@@ -14,4 +14,16 @@ router.get(
     (req, res): Promise<any> => locationController.getAll(req, res)
 )
 
+router.get(
+    '/:id',
+    validateMongoIdParams,
+    (req, res): Promise<any> => locationController.getById(req, res)
+)
+
+router.delete(
+    '/:id',
+    validateMongoIdParams,
+    (req, res): Promise<any> => locationController.deleteById(req, res)
+)
+
 export default router;

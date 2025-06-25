@@ -4,5 +4,7 @@ import { BasicServiceResponse } from "../types";
 
 export interface ILocationService {
     create: (data: ILocationCreate, session: SessionType) => Promise<BasicServiceResponse>;
-    getAll(session?: SessionType): Promise<ILocation[]>
+    getAll(session?: SessionType): Promise<ILocation[]>;
+    findById(id: string, session?: SessionType): Promise<ILocation | null>;
+    deleteById(id: string, session: SessionType): Promise<BasicServiceResponse>;
 }
