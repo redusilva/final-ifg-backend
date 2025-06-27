@@ -18,6 +18,7 @@ export const buildDiscipline = (data: any): IDiscipline => {
         id: data?._id.toString(),
         name: data?.name,
         description: data?.description,
+        classroom_id: data?.classroom_id?.toString() || null,
         teacher_id: data?.teacher_id?.toString() || null,
         students: data?.students.map((student_id: any) => student_id.toString()) || [],
         schedule: data?.schedule || null,
@@ -26,11 +27,12 @@ export const buildDiscipline = (data: any): IDiscipline => {
     }
 }
 
-export const buildDisciplineItemRepost = (data: any): IDisciplineReport => {
+export const buildDisciplineItemReport = (data: any): IDisciplineReport => {
     return {
         id: data?._id.toString(),
         name: data?.name,
         description: data?.description,
+        classroom: data?.classroom_id || null,
         schedule: data?.schedule || null,
         teacher: buildUser(data?.teacher_id) || null,
         students: data?.students.map((student: any) => buildUser(student)) || [],

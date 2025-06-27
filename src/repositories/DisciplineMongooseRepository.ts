@@ -3,7 +3,7 @@ import { SessionType } from "../intefaces/config/IntDatabase";
 import { IDiscipline, IDisciplineCreate, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { DisciplineModel } from "../models/DisciplineMongooseModel";
-import { buildDiscipline, buildDisciplineItemRepost, buildSchedule } from "../utils/builder";
+import { buildDiscipline, buildDisciplineItemReport, buildSchedule } from "../utils/builder";
 
 class DisciplineMongooseRepository implements IDisciplineRepository {
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
@@ -83,9 +83,10 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
             .find()
             .populate('students')
             .populate('teacher_id')
+            .populate('classroom_id')
             .session(session);
 
-        return disciplines?.map(discipline => buildDisciplineItemRepost(discipline)) || [];
+        return disciplines?.map(discipline => buildDisciplineItemReport(discipline)) || [];
     }
 
     async deleteById(id: string, session: SessionType): Promise<void> {
@@ -113,6 +114,30 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         discipline.schedule = null;
 
         await discipline.save({ session })
+    }
+
+    async registerClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline> {
+        const discipline = await DisciplineModel.findById(disciplineId).session(session);
+        if (!discipline) {
+            throw new Error("Discipline not found")
+        }
+
+        discipline.classroom_id = classroomId;
+
+        await discipline.save({ session })
+        return buildDiscipline(discipline);
+    }
+
+    async removeClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline> {
+        const discipline = await DisciplineModel.findById(disciplineId).session(session);
+        if (!discipline) {
+            throw new Error("Discipline not found")
+        }
+
+        discipline.classroom_id = null;
+
+        await discipline.save({ session })
+        return buildDiscipline(discipline);
     }
 }
 

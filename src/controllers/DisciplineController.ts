@@ -5,6 +5,7 @@ import { ILogService } from "../intefaces/services/ILogService";
 import { IntNotificationService } from "../intefaces/services/IntNotificationService";
 import { IntUserService } from "../intefaces/services/IntUserService";
 import { IntDisciplineValidator } from "../intefaces/validators/IntDisciplineValidator";
+import { Request, Response } from "express";
 
 interface DataProps {
     disciplineService: IDisciplineService;
@@ -304,6 +305,52 @@ class DisciplineController {
                 errors: {
                     error: result.error
                 }
+            });
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async registerClassroom(req: Request, res: Response): Promise<any> {
+        try {
+            const {
+                classroomId,
+                disciplineId
+            } = req.params;
+
+            const result = await this.disciplineService.registerClassroom(classroomId, disciplineId, null);
+            if (result.status === 200) {
+                return res.status(200).json(result.data);
+            }
+
+            return res.status(result.status as number).json({
+                errors: { error: result.error }
+            });
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }
+
+    async removeClassroom(req: Request, res: Response): Promise<any> {
+        try {
+            const {
+                classroomId,
+                disciplineId
+            } = req.params;
+
+            const result = await this.disciplineService.removeClassroom(classroomId, disciplineId, null);
+            if (result.status === 200) {
+                return res.status(200).json(result.data);
+            }
+
+            return res.status(result.status as number).json({
+                errors: { error: result.error }
             });
         } catch (error: any) {
             this.logService.createLog(error.message, 'error');

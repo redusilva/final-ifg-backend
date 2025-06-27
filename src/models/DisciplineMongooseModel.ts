@@ -27,6 +27,11 @@ const DisciplineSchema = new Schema({
         type: String,
         trim: true
     },
+    classroom_id: {
+        type: Types.ObjectId,
+        ref: 'Location',
+        required: false
+    },
     teacher_id: {
         type: Types.ObjectId,
         ref: 'User',

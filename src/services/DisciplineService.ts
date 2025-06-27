@@ -2,18 +2,23 @@ import { SessionType } from "../intefaces/config/IntDatabase";
 import { IDiscipline, IDisciplineCreate, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
 import { IUser } from "../intefaces/entities/User";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
+import { ILocationRepository } from "../intefaces/repositories/ILocationRepository";
 import { IDisciplineService } from "../intefaces/services/IDisciplineService";
 import { BasicServiceResponse } from "../intefaces/types";
+import { buildServiceResponse } from "../utils/builder";
 
 interface DataProps {
     disciplineRepository: IDisciplineRepository;
+    classroomRepository: ILocationRepository;
 }
 
 class DisciplineService implements IDisciplineService {
     private disciplineRepository: IDisciplineRepository;
+    private classroomRepository: ILocationRepository;
 
     constructor(data: DataProps) {
         this.disciplineRepository = data.disciplineRepository;
+        this.classroomRepository = data.classroomRepository;
     }
 
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
@@ -29,141 +34,77 @@ class DisciplineService implements IDisciplineService {
     async subscribeStudentToDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse> {
         const discipline = await this.findById(disciplineId, session);
         if (!discipline) {
-            return {
-                status: 404,
-                error: 'Discipline not found',
-                data: null
-            }
+            return buildServiceResponse(404, 'Discipline not found', null);
         }
 
         if (user.type !== 'student') {
-            return {
-                status: 400,
-                error: 'User is not a student',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is not a student', null);
         }
 
         const alreadySubscribed = discipline.students.find((student) => student === user.id);
         if (alreadySubscribed) {
-            return {
-                status: 400,
-                error: 'User is already subscribed to this discipline',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is already subscribed to this discipline', null);
         }
 
         const updatedDiscipline = await this.disciplineRepository.subscribeStudentToDiscipline(disciplineId, user.id, session);
-        return {
-            status: 200,
-            error: null,
-            data: updatedDiscipline
-        };
+        return buildServiceResponse(200, null, updatedDiscipline);
     }
 
     async unsubscribeStudentFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse> {
         const discipline = await this.findById(disciplineId, session);
         if (!discipline) {
-            return {
-                status: 404,
-                error: 'Discipline not found',
-                data: null
-            }
+            return buildServiceResponse(404, 'Discipline not found', null);
         }
 
         if (user.type !== 'student') {
-            return {
-                status: 400,
-                error: 'User is not a student',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is not a student', null);
         }
 
         const alreadySubscribed = discipline.students.find((student) => student === user.id);
         if (!alreadySubscribed) {
-            return {
-                status: 400,
-                error: 'User is not subscribed to this discipline',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is not subscribed to this discipline', null);
         }
 
         const updatedDiscipline = await this.disciplineRepository.unsubscribeStudentFromDiscipline(disciplineId, user.id, session);
-        return {
-            status: 200,
-            error: null,
-            data: updatedDiscipline
-        };
+        return buildServiceResponse(200, null, updatedDiscipline);
     }
 
     async subscribeTeacherToDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse> {
         const discipline = await this.findById(disciplineId, session);
         if (!discipline) {
-            return {
-                status: 404,
-                error: 'Discipline not found',
-                data: null
-            }
+            return buildServiceResponse(404, 'Discipline not found', null);
         }
 
         if (user.type !== 'teacher') {
-            return {
-                status: 400,
-                error: 'User is not a teacher',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is not a teacher', null);
         }
 
         const alreadySubscribed = discipline.teacher_id === user.id;
         if (alreadySubscribed) {
-            return {
-                status: 400,
-                error: 'User is already subscribed to this discipline',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is already subscribed to this discipline', null);
         }
 
         const updatedDiscipline = await this.disciplineRepository.subscribeTeacherToDiscipline(disciplineId, user.id, session);
-        return {
-            status: 200,
-            error: null,
-            data: updatedDiscipline
-        };
+        return buildServiceResponse(200, null, updatedDiscipline);
     }
 
     async unsubscribeTeacherFromDiscipline(disciplineId: string, user: IUser, session: SessionType): Promise<BasicServiceResponse> {
         const discipline = await this.findById(disciplineId, session);
         if (!discipline) {
-            return {
-                status: 404,
-                error: 'Discipline not found',
-                data: null
-            }
+            return buildServiceResponse(404, 'Discipline not found', null);
         }
 
         if (user.type !== 'teacher') {
-            return {
-                status: 400,
-                error: 'User is not a teacher',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is not a teacher', null);
         }
 
         const alreadySubscribed = discipline.teacher_id === user.id;
         if (!alreadySubscribed) {
-            return {
-                status: 400,
-                error: 'User is not subscribed to this discipline',
-                data: null
-            }
+            return buildServiceResponse(400, 'User is not subscribed to this discipline', null);
         }
 
         const updatedDiscipline = await this.disciplineRepository.unsubscribeTeacherFromDiscipline(disciplineId, user.id, session);
-        return {
-            status: 200,
-            error: null,
-            data: updatedDiscipline
-        };
+        return buildServiceResponse(200, null, updatedDiscipline);
     }
 
     async getAll(session?: SessionType): Promise<IDisciplineReport[]> {
@@ -178,19 +119,11 @@ class DisciplineService implements IDisciplineService {
     async createSchedule(id: string, data: Schedule, session: SessionType): Promise<BasicServiceResponse> {
         const discipline = await this.disciplineRepository.findById(id);
         if (!discipline) {
-            return {
-                status: 404,
-                data: null,
-                error: "Discipline not found"
-            }
+            return buildServiceResponse(404, "Discipline not found", null);
         }
 
         if (discipline.schedule) {
-            return {
-                status: 400,
-                data: null,
-                error: "Schedule already created"
-            }
+            return buildServiceResponse(400, "Schedule already created", null);
         }
 
         const updatedDiscipline = await this.disciplineRepository.createSchedule(
@@ -202,38 +135,80 @@ class DisciplineService implements IDisciplineService {
             throw new Error("Discipline not updated");
         }
 
-        return {
-            status: 200,
-            data: updatedDiscipline,
-            error: null
-        }
+        return buildServiceResponse(200, null, updatedDiscipline);
     }
 
     async deleteSchedule(id: string, session: SessionType): Promise<BasicServiceResponse> {
         const discipline = await this.findById(id, session);
         if (!discipline) {
-            return {
-                status: 404,
-                data: null,
-                error: "Discipline not found"
-            }
+            return buildServiceResponse(404, "Discipline not found", null);
         }
 
         if (!discipline.schedule) {
-            return {
-                status: 400,
-                data: null,
-                error: "Schedule already deleted"
-            }
+            return buildServiceResponse(400, "Schedule already deleted", null);
         }
 
         await this.disciplineRepository.deleteSchedule(id, session);
 
-        return {
-            status: 200,
-            data: null,
-            error: null
+        return buildServiceResponse(200, null, null);
+    }
+
+    async registerClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<BasicServiceResponse> {
+        const [discipline, classroom] = await Promise.all([
+            this.findById(disciplineId, session),
+            this.classroomRepository.findById(classroomId, session)
+        ])
+        if (!discipline) {
+            return buildServiceResponse(
+                404,
+                "Discipline not found",
+                null
+            );
         }
+
+        if (!classroom) {
+            return buildServiceResponse(
+                404,
+                "Classroom not found",
+                null
+            );
+        }
+
+        const updatedDiscipline = await this.disciplineRepository.registerClassroom(classroomId, disciplineId, session);
+        return buildServiceResponse(
+            200,
+            null,
+            updatedDiscipline
+        );
+    }
+
+    async removeClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<BasicServiceResponse> {
+        const [discipline, classroom] = await Promise.all([
+            this.findById(disciplineId, session),
+            this.classroomRepository.findById(classroomId, session)
+        ])
+        if (!discipline) {
+            return buildServiceResponse(
+                404,
+                "Discipline not found",
+                null
+            );
+        }
+
+        if (!classroom) {
+            return buildServiceResponse(
+                404,
+                "Classroom not found",
+                null
+            );
+        }
+
+        const updatedDiscipline = await this.disciplineRepository.removeClassroom(classroomId, disciplineId, session);
+        return buildServiceResponse(
+            200,
+            null,
+            updatedDiscipline
+        );
     }
 }
 

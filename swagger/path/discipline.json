@@ -61,7 +61,10 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/DisciplineReport"
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/DisciplineReport"
+                                }
                             }
                         }
                     }
@@ -440,6 +443,146 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/NotFoundError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/discipline/{disciplineId}/classroom/{classroomId}": {
+        "post": {
+            "summary": "Cadastra sala de aula na disciplina",
+            "description": "Este endpoint é utilizado para vincular sala de aula ou laboratórios a uma disciplina",
+            "tags": [
+                "Relacionamento sala de aula/disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "disciplineId",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "classroomId",
+                    "in": "path",
+                    "description": "ID da sala de aula",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Discipline"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Disciplina ou sala de aula não encontrados!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "Remove sala de aula da disciplina",
+            "description": "Este endpoint é utilizado para remover o vínculo entre sala de aula e disciplina",
+            "tags": [
+                "Relacionamento sala de aula/disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "disciplineId",
+                    "in": "path",
+                    "description": "ID da disciplina",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "classroomId",
+                    "in": "path",
+                    "description": "ID da sala de aula",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Discipline"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Operação inválida!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Disciplina ou sala de aula não encontrados!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
                             }
                         }
                     }

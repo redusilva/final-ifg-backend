@@ -27,6 +27,7 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
 
         const formattedData = {
             ...result.data,
+            classroom_id: null,
             teacher_id: null,
             students: [],
             schedule: null

@@ -53,6 +53,10 @@
                 "type": "string",
                 "format": "email"
             },
+            "classroom_id": {
+                "type": "string",
+                "format": "uuid"
+            },
             "teacher_id": {
                 "type": "string",
                 "format": "uuid"
@@ -95,6 +99,10 @@
             "description": {
                 "type": "string",
                 "format": "email"
+            },
+            "classroom": {
+                "type": "object",
+                "$ref": "#/components/schemas/Location"
             },
             "teacher": {
                 "type": "object",

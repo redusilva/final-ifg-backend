@@ -1,5 +1,6 @@
 import DisciplineController from "../controllers/DisciplineController";
 import { DisciplineMongooseRepository } from "../repositories/DisciplineMongooseRepository";
+import LocationMongooseRepository from "../repositories/LocationMongooseRepository";
 import UserMongooseRepository from "../repositories/UserMongooseRepository";
 import { DisciplineService } from "../services/DisciplineService";
 import { EmailService } from "../services/EmailService";
@@ -11,11 +12,13 @@ import { mongooseContainer } from "./MongooseContainer";
 // Repositories
 const disciplineRepository = new DisciplineMongooseRepository();
 const userMongooseRepository = new UserMongooseRepository();
+const locationRepository = new LocationMongooseRepository();
 
 // Services
 const databaseService = mongooseContainer.mongooseService;
 const disciplineService = new DisciplineService({
-    disciplineRepository
+    disciplineRepository,
+    classroomRepository: locationRepository
 });
 const logService = new LogService();
 const notificationService = new EmailService();

@@ -28,6 +28,12 @@ router.delete(
     (req, res) => disciplineController.removeTeacher(req, res)
 );
 
+router.delete(
+    '/:disciplineId/classroom/:classroomId',
+    validateMongoIdParams,
+    (req, res) => disciplineController.removeClassroom(req, res)
+);
+
 router.post(
     '/:disciplineId/teachers/:teacherId',
     validateMongoIdParams,
@@ -38,6 +44,12 @@ router.post(
     '/:disciplineId/students/:studentId',
     validateMongoIdParams,
     (req, res) => disciplineController.registerStudents(req, res)
+);
+
+router.post(
+    '/:disciplineId/classroom/:classroomId',
+    validateMongoIdParams,
+    (req, res) => disciplineController.registerClassroom(req, res)
 );
 
 router.get(
