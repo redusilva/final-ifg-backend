@@ -1,17 +1,17 @@
-import { IntLocationValidator } from "../intefaces/validators/IntLocationValidator";
+import { IntClassroomValidator } from "../intefaces/validators/IntClassroomValidator";
 import { IntValidatorsResponse } from "../intefaces/validators/IntValidatorsResponse";
 import z from "zod";
 
-class LocationZodValidator implements IntLocationValidator {
-    validateCreateLocation(data: any): IntValidatorsResponse {
-        const locationSchema = z.object({
+class ClassroomZodValidator implements IntClassroomValidator {
+    validateCreateClassroom(data: any): IntValidatorsResponse {
+        const classroomSchema = z.object({
             name: z.string().min(1),
             latitude: z.string().min(1),
             longitude: z.string().min(1),
             min_distance: z.number().nonnegative('Min distance must be zero or positive'),
         });
 
-        const result = locationSchema.safeParse(data);
+        const result = classroomSchema.safeParse(data);
         if (!result.success) {
             return {
                 success: false,
@@ -28,4 +28,4 @@ class LocationZodValidator implements IntLocationValidator {
     }
 }
 
-export default LocationZodValidator;
+export default ClassroomZodValidator;

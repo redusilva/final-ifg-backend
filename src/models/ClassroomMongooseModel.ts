@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const LocationSchema = new Schema(
+const ClassroomSchema = new Schema(
     {
         name: { type: String, required: true },
         latitude: { type: String, required: true },
@@ -24,9 +24,9 @@ const LocationSchema = new Schema(
 );
 
 // Middleware para atualizar automaticamente updated_at
-LocationSchema.pre('save', function (next) {
+ClassroomSchema.pre('save', function (next) {
     this.updated_at = new Date();
     next();
 });
 
-export const LocationModel = model('Location', LocationSchema);
+export const ClassroomModel = model('Classroom', ClassroomSchema);

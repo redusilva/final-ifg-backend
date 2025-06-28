@@ -1,5 +1,5 @@
 import { IDiscipline, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
-import { ILocation } from "../intefaces/entities/Location";
+import { IClassroom } from "../intefaces/entities/Classroom";
 import { IUser } from "../intefaces/entities/User";
 import { BasicServiceResponse } from "../intefaces/types";
 
@@ -57,14 +57,14 @@ export const buildServiceResponse = (status: number, error: string | null, data:
     };
 }
 
-export const buildLocation = (location: any): ILocation => {
+export const buildClassroom = (classroom: any): IClassroom => {
     return {
-        id: location.id,
-        name: location.name,
-        latitude: location.latitude,
-        longitude: location.longitude,
-        min_distance: location.min_distance,
-        created_at: location.created_at,
-        updated_at: location.updated_at,
+        id: classroom.id,
+        name: classroom.name,
+        latitude: classroom.latitude,
+        longitude: classroom.longitude,
+        min_distance: classroom.min_distance,
+        created_at: classroom.created_at,
+        updated_at: classroom.updated_at,
     }
 }

@@ -1,6 +1,6 @@
 import DisciplineController from "../controllers/DisciplineController";
 import { DisciplineMongooseRepository } from "../repositories/DisciplineMongooseRepository";
-import LocationMongooseRepository from "../repositories/LocationMongooseRepository";
+import ClassroomMongooseRepository from "../repositories/ClassroomMongooseRepository";
 import UserMongooseRepository from "../repositories/UserMongooseRepository";
 import { DisciplineService } from "../services/DisciplineService";
 import { EmailService } from "../services/EmailService";
@@ -12,13 +12,13 @@ import { mongooseContainer } from "./MongooseContainer";
 // Repositories
 const disciplineRepository = new DisciplineMongooseRepository();
 const userMongooseRepository = new UserMongooseRepository();
-const locationRepository = new LocationMongooseRepository();
+const classroomRepository = new ClassroomMongooseRepository();
 
 // Services
 const databaseService = mongooseContainer.mongooseService;
 const disciplineService = new DisciplineService({
     disciplineRepository,
-    classroomRepository: locationRepository
+    classroomRepository: classroomRepository
 });
 const logService = new LogService();
 const notificationService = new EmailService();
@@ -30,7 +30,7 @@ const userService = new UserService({
 const validator = new DisciplineZodValidator();
 
 // Controllers
-const disciplineController = new DisciplineController({
+export const disciplineController = new DisciplineController({
     disciplineService,
     logService,
     notificationService,
@@ -38,5 +38,3 @@ const disciplineController = new DisciplineController({
     userService,
     databaseService
 });
-
-export { disciplineController };

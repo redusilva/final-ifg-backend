@@ -2,19 +2,19 @@ import { SessionType } from "../intefaces/config/IntDatabase";
 import { IDiscipline, IDisciplineCreate, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
 import { IUser } from "../intefaces/entities/User";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
-import { ILocationRepository } from "../intefaces/repositories/ILocationRepository";
+import { IClassroomRepository } from "../intefaces/repositories/IClassroomRepository";
 import { IDisciplineService } from "../intefaces/services/IDisciplineService";
 import { BasicServiceResponse } from "../intefaces/types";
 import { buildServiceResponse } from "../utils/builder";
 
 interface DataProps {
     disciplineRepository: IDisciplineRepository;
-    classroomRepository: ILocationRepository;
+    classroomRepository: IClassroomRepository;
 }
 
 class DisciplineService implements IDisciplineService {
     private disciplineRepository: IDisciplineRepository;
-    private classroomRepository: ILocationRepository;
+    private classroomRepository: IClassroomRepository;
 
     constructor(data: DataProps) {
         this.disciplineRepository = data.disciplineRepository;

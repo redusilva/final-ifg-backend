@@ -1,4 +1,4 @@
-export interface ILocation {
+export interface IClassroom {
     id: string;
     name: string;
     latitude: string;
@@ -8,7 +8,7 @@ export interface ILocation {
     updated_at: Date;
 }
 
-export interface ILocationCreate {
+export interface IClassroomCreate {
     name: string;
     latitude: string;
     longitude: string;

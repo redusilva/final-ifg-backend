@@ -1,5 +1,5 @@
 {
-    "/location": {
+    "/classroom": {
         "post": {
             "summary": "Criar sala de aula",
             "description": "Este endpoint é utilizado para cadastrar salas de aula e/ou laboratórios. Para criar as salas, envio os campos requeridos no corpo da requisição. <br/><br/> OBS: O campo 'min_distance' é a distância mínima que aquele aluno precisa estar da sala de aula para poder computar presença pra ele.",
@@ -11,7 +11,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/BasicLocation"
+                            "$ref": "#/components/schemas/BasicClassroom"
                         }
                     }
                 }
@@ -22,7 +22,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Location"
+                                "$ref": "#/components/schemas/Classroom"
                             }
                         }
                     }
@@ -73,7 +73,7 @@
                             "schema": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/Location"
+                                    "$ref": "#/components/schemas/Classroom"
                                 }
                             }
                         }
@@ -112,7 +112,7 @@
             }
         }
     },
-    "/location/{id}": {
+    "/classroom/{id}": {
         "get": {
             "summary": "Listar sala de aula",
             "description": "Este endpoint é utilizado para listar uma sala de aula ou laboratório cadastrado no sistema.",
@@ -136,7 +136,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Location"
+                                "$ref": "#/components/schemas/Classroom"
                             }
                         }
                     }

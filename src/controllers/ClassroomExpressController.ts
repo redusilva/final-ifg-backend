@@ -1,37 +1,37 @@
-import { ILocationController } from "../intefaces/controllers/ILocationController";
-import { ILocationService } from "../intefaces/services/ILocationService";
+import { IClassroomController } from "../intefaces/controllers/IClassroomController";
+import { IClassroomService } from "../intefaces/services/IClassroomService";
 import { ILogService } from "../intefaces/services/ILogService";
 import { Request, Response } from "express";
-import { IntLocationValidator } from "../intefaces/validators/IntLocationValidator";
+import { IntClassroomValidator } from "../intefaces/validators/IntClassroomValidator";
 import mongoose from "mongoose";
 
 interface Props {
-    locationService: ILocationService;
+    classroomService: IClassroomService;
     logService: ILogService;
-    locationValidator: IntLocationValidator;
+    classroomValidator: IntClassroomValidator;
 }
 
-class LocationExpressController implements ILocationController {
-    private locationService: ILocationService;
+class ClassroomExpressController implements IClassroomController {
+    private classroomService: IClassroomService;
     private logService: ILogService;
-    private locationValidator: IntLocationValidator;
+    private classroomValidator: IntClassroomValidator;
 
     constructor(data: Props) {
-        this.locationService = data.locationService;
+        this.classroomService = data.classroomService;
         this.logService = data.logService;
-        this.locationValidator = data.locationValidator;
+        this.classroomValidator = data.classroomValidator;
     }
 
-    async createLocation(req: Request, res: Response) {
+    async createClassroom(req: Request, res: Response) {
         try {
-            const { success, error, data } = this.locationValidator.validateCreateLocation(req.body);
+            const { success, error, data } = this.classroomValidator.validateCreateClassroom(req.body);
             if (!success) {
                 return res.status(400).json({
                     errors: error
                 });
             }
 
-            const result = await this.locationService.create(data, null);
+            const result = await this.classroomService.create(data, null);
             if (result.status === 201) {
                 return res.status(201).json(result.data);
             }
@@ -50,7 +50,7 @@ class LocationExpressController implements ILocationController {
 
     async getAll(req: Request, res: Response): Promise<any> {
         try {
-            const result = await this.locationService.getAll(null);
+            const result = await this.classroomService.getAll(null);
             return res.status(200).json(result);
         } catch (error: any) {
             this.logService.createLog(error.message, 'error');
@@ -64,10 +64,10 @@ class LocationExpressController implements ILocationController {
         try {
             const { id } = req.params;
 
-            const result = await this.locationService.findById(id, null);
+            const result = await this.classroomService.findById(id, null);
             if (!result) {
                 return res.status(404).json({
-                    error: 'Location not found'
+                    error: 'Classroom not found'
                 });
             }
 
@@ -88,7 +88,7 @@ class LocationExpressController implements ILocationController {
 
             session.startTransaction();
 
-            const result = await this.locationService.deleteById(id, session);
+            const result = await this.classroomService.deleteById(id, session);
 
             if (result.status !== 200) {
                 await session.abortTransaction();
@@ -100,7 +100,7 @@ class LocationExpressController implements ILocationController {
             await session.commitTransaction();
 
             return res.status(200).json({
-                message: 'Location deleted'
+                message: 'Classroom deleted'
             });
         } catch (error: any) {
             await session.abortTransaction();
@@ -114,4 +114,4 @@ class LocationExpressController implements ILocationController {
     }
 }
 
-export default LocationExpressController;
+export default ClassroomExpressController;

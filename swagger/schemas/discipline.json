@@ -102,7 +102,7 @@
             },
             "classroom": {
                 "type": "object",
-                "$ref": "#/components/schemas/Location"
+                "$ref": "#/components/schemas/Classroom"
             },
             "teacher": {
                 "type": "object",
