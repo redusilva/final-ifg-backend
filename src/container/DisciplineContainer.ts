@@ -23,7 +23,8 @@ const disciplineService = new DisciplineService({
 const logService = new LogService();
 const notificationService = new EmailService();
 const userService = new UserService({
-    userRepository: userMongooseRepository
+    userRepository: userMongooseRepository,
+    disciplineRepository
 });
 
 // Validators

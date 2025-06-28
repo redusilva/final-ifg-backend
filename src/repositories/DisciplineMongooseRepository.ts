@@ -139,6 +139,28 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         await discipline.save({ session })
         return buildDiscipline(discipline);
     }
+
+    async removeClassroomFromAllDisciplines(classroomId: string, session: SessionType): Promise<void> {
+        await DisciplineModel
+            .updateMany(
+                { classroom_id: classroomId },
+                { classroom_id: null }
+            )
+            .session(session);
+    }
+
+    async removeUserFromAllDisciplines(userId: string, session: SessionType): Promise<void> {
+        await Promise.all([
+            DisciplineModel.updateMany(
+                { teacher_id: userId },
+                { $set: { teacher_id: null } }
+            ).session(session),
+            DisciplineModel.updateMany(
+                { students: userId },
+                { $pull: { students: userId } }
+            ).session(session)
+        ]);
+    }
 }
 
 export { DisciplineMongooseRepository };

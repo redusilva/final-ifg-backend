@@ -14,4 +14,6 @@ export interface IDisciplineRepository {
     deleteSchedule(id: string, session: SessionType): Promise<void>;
     registerClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline>;
     removeClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline>;
+    removeClassroomFromAllDisciplines(classroomId: string, session: SessionType): Promise<void>;
+    removeUserFromAllDisciplines(userId: string, session: SessionType): Promise<void>;
 }

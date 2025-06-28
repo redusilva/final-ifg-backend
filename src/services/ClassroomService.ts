@@ -13,9 +13,11 @@ interface Props {
 
 class ClassroomService implements IClassroomService {
     private classroomRepository: IClassroomRepository;
+    private disciplineRepository: IDisciplineRepository;
 
     constructor(data: Props) {
         this.classroomRepository = data.classroomRepository;
+        this.disciplineRepository = data.disciplineRepository;
     }
 
     async create(data: IClassroomCreate, session: SessionType): Promise<BasicServiceResponse> {
@@ -43,13 +45,15 @@ class ClassroomService implements IClassroomService {
     }
 
     async deleteById(id: string, session: SessionType): Promise<BasicServiceResponse> {
-
         const classroom = await this.classroomRepository.findById(id, session);
         if (!classroom) {
             return buildServiceResponse(404, "Classroom not found", null);
         }
 
-        await this.classroomRepository.deleteById(id, session);
+        await Promise.all([
+            this.disciplineRepository.removeClassroomFromAllDisciplines(id, session),
+            this.classroomRepository.deleteById(id, session)
+        ])
 
         return buildServiceResponse(
             200,

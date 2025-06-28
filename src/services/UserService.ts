@@ -1,17 +1,21 @@
 import { SessionType } from "../intefaces/config/IntDatabase";
 import { IntBasicUser, IUser, UserType } from "../intefaces/entities/User";
+import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { IntUserRepository } from "../intefaces/repositories/IntUserRepository";
 import { IntUserService } from "../intefaces/services/IntUserService";
 
 interface UserServiceProps {
     userRepository: IntUserRepository;
+    disciplineRepository: IDisciplineRepository;
 }
 
 class UserService implements IntUserService {
     private userRepository: IntUserRepository;
+    private disciplineRepository: IDisciplineRepository;
 
-    constructor({ userRepository }: UserServiceProps) {
-        this.userRepository = userRepository;
+    constructor(data: UserServiceProps) {
+        this.userRepository = data.userRepository;
+        this.disciplineRepository = data.disciplineRepository;
     }
 
     async findUserByEmail(email: string, session: SessionType): Promise<IUser | null> {
@@ -30,7 +34,10 @@ class UserService implements IntUserService {
     }
 
     async deleteUserById(id: string, session: SessionType): Promise<void> {
-        await this.userRepository.deleteUserById(id, session);
+        await Promise.all([
+            this.userRepository.deleteUserById(id, session),
+            this.disciplineRepository.removeUserFromAllDisciplines(id, session)
+        ])
     }
 
     async findAllUsers(session: SessionType): Promise<IUser[]> {

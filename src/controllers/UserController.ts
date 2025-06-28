@@ -5,6 +5,7 @@ import { IntUserValidator } from "../intefaces/validators/IntUserValidators";
 import { IntBasicUser, IUser, UserType } from "../intefaces/entities/User";
 import { ILogService } from "../intefaces/services/ILogService";
 import { IntNotificationService } from "../intefaces/services/IntNotificationService";
+import mongoose from "mongoose";
 
 interface UserControllerProps {
     userService: IntUserService;
@@ -100,17 +101,22 @@ class UserController {
     }
 
     async deleteById(req: Request, res: Response) {
+        const session = await mongoose.startSession();
         try {
+            session.startTransaction();
             const { id } = req.params;
 
-            const user = await this.userService.findUserById(id, null);
+            const user = await this.userService.findUserById(id, session);
             if (!user) {
+                await session.abortTransaction();
                 return res.status(404).json({
                     error: 'User not found'
                 })
             }
 
-            await this.userService.deleteUserById(id, null);
+            await this.userService.deleteUserById(id, session);
+
+            await session.commitTransaction();
 
             this.logService.createLog(`User ${user.name} deleted`, 'info');
 
@@ -118,10 +124,13 @@ class UserController {
                 message: 'User deleted'
             })
         } catch (error: any) {
+            await session.abortTransaction();
             this.logService.createLog(error.message, 'error');
             return res.status(500).json({
                 error: 'Internal Server Error'
             })
+        } finally {
+            session.endSession();
         }
     }
 
