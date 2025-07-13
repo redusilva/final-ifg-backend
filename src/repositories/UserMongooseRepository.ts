@@ -13,7 +13,9 @@ class UserMongooseRepository implements IntUserRepository {
     }
 
     async createUser(user: IntBasicUser, session: SessionType): Promise<IUser | null> {
-        const createdUser = new UserModel(user);
+        const { id, ...rest } = user;
+
+        const createdUser = new UserModel({ _id: id, ...rest });
         await createdUser.save({ session });
 
         return buildUser(createdUser);

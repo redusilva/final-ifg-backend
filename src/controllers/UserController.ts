@@ -38,7 +38,7 @@ class UserController {
                     errors: error
                 })
             }
-            const { name, email, type, phone }: IntBasicUser = data;
+            const { name, email, type, phone, id }: IntBasicUser = data;
 
             const session = await this.databaseService.startTransaction();
             const currentUser = await this.userService.findUserByEmail(email, session);
@@ -50,7 +50,7 @@ class UserController {
                 })
             }
 
-            const user = await this.userService.createUser({ name, email, type, phone }, session);
+            const user = await this.userService.createUser({ name, email, type, phone, id }, session);
             if (!user) {
                 await this.databaseService.rollbackTransaction(session);
                 return res.status(400).json({

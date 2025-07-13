@@ -11,6 +11,7 @@ export interface IUser {
 }
 
 export interface IntBasicUser {
+    id: string;
     name: string;
     email: string;
     type: UserType;

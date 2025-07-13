@@ -1,10 +1,14 @@
 import { IntUserValidator } from "../intefaces/validators/IntUserValidators";
 import { IntValidatorsResponse } from "../intefaces/validators/IntValidatorsResponse";
 import z from "zod";
+import { mongoIdRegex } from "../utils/enum";
 
 class UserZodValidator implements IntUserValidator {
     validateCreateUser(data: any): IntValidatorsResponse {
         const userSchema = z.object({
+            id: z
+                .string()
+                .regex(mongoIdRegex, 'ID must be a valid MongoDB ObjectId'),
             email: z.string().email(),
             name: z.string().trim().min(2),
             type: z.enum(['student', 'teacher']),

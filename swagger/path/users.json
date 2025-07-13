@@ -4,7 +4,7 @@
             "summary": "Criar usuário",
             "description": "Este endpoint é utilizado para criar alunos e professores. Para criar alunos, envie o campo type com o valor student. Para criar professores, envie o campo type com o valor teacher.",
             "tags": [
-                "Usuário"
+                "Não utilizar"
             ],
             "requestBody": {
                 "required": true,
@@ -197,7 +197,7 @@
             "summary": "Deletar usuário",
             "description": "Este endpoint é utilizado para deletar um aluno ou professor pelo ID",
             "tags": [
-                "Usuário"
+                "Não utilizar"
             ],
             "parameters": [
                 {
