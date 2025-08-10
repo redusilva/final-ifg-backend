@@ -8,6 +8,7 @@ export const buildDisciplineItemSummary = (data: any): IDisciplineSummary => {
         id: data?._id.toString(),
         name: data?.name,
         description: data?.description,
+        total_classes: data.total_classes != null ? data.total_classes : null,
         start_time: data?.schedule?.start_time || null,
         end_time: data?.schedule?.end_time || null,
         classroom_name: data?.classroom_id?.name || null,
@@ -15,21 +16,12 @@ export const buildDisciplineItemSummary = (data: any): IDisciplineSummary => {
     }
 }
 
-export const buildUser = (user: any): IUser => ({
-    id: user?.id,
-    name: user?.name,
-    email: user?.email,
-    phone: user?.phone,
-    type: user?.type,
-    created_at: user?.created_at,
-    updated_at: user?.updated_at
-})
-
 export const buildDiscipline = (data: any): IDiscipline => {
     return {
         id: data?._id.toString(),
         name: data?.name,
         description: data?.description,
+        total_classes: data.total_classes != null ? data.total_classes : null,
         classroom_id: data?.classroom_id?.toString() || null,
         teacher_id: data?.teacher_id?.toString() || null,
         students: data?.students.map((student_id: any) => student_id.toString()) || [],
@@ -44,6 +36,7 @@ export const buildDisciplineItemReport = (data: any): IDisciplineReport => {
         id: data?._id.toString(),
         name: data?.name,
         description: data?.description,
+        total_classes: data.total_classes != null ? data.total_classes : null,
         classroom: data?.classroom_id || null,
         schedule: data?.schedule || null,
         teacher: buildUser(data?.teacher_id) || null,
@@ -52,6 +45,17 @@ export const buildDisciplineItemReport = (data: any): IDisciplineReport => {
         updated_at: data?.updated_at
     }
 }
+
+export const buildUser = (user: any): IUser => ({
+    id: user?.id,
+    name: user?.name,
+    email: user?.email,
+    phone: user?.phone,
+    type: user?.type,
+    created_at: user?.created_at,
+    updated_at: user?.updated_at
+})
+
 
 export const buildSchedule = (data: any): Schedule => {
     return {

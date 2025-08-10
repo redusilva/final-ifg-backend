@@ -4,16 +4,21 @@
         "properties": {
             "name": {
                 "type": "string",
-                "example": "John Doe"
+                "example": "Cálculo I"
             },
             "description": {
                 "type": "string",
-                "format": "email"
+                "example": "Disciplina de introdução ao cálculo."
+            },
+            "total_classes": {
+                "type": "integer",
+                "example": 40
             }
         },
         "required": [
             "name",
-            "description"
+            "description",
+            "total_classes"
         ]
     },
     "Schedule": {
@@ -47,11 +52,15 @@
             },
             "name": {
                 "type": "string",
-                "example": "John Doe"
+                "example": "Cálculo I"
             },
             "description": {
                 "type": "string",
-                "format": "email"
+                "example": "Disciplina de introdução ao cálculo."
+            },
+            "total_classes": {
+                "type": "integer",
+                "example": 40
             },
             "classroom_id": {
                 "type": "string",
@@ -81,8 +90,10 @@
             }
         },
         "required": [
+            "id",
             "name",
-            "description"
+            "description",
+            "total_classes"
         ]
     },
     "DisciplineReport": {
@@ -94,24 +105,25 @@
             },
             "name": {
                 "type": "string",
-                "example": "John Doe"
+                "example": "Cálculo I"
             },
             "description": {
                 "type": "string",
-                "format": "email"
+                "example": "Disciplina de introdução ao cálculo."
+            },
+            "total_classes": {
+                "type": "integer",
+                "example": 40
             },
             "classroom": {
-                "type": "object",
                 "$ref": "#/components/schemas/Classroom"
             },
             "teacher": {
-                "type": "object",
                 "$ref": "#/components/schemas/User"
             },
             "students": {
                 "type": "array",
                 "items": {
-                    "type": "object",
                     "$ref": "#/components/schemas/User"
                 }
             },
@@ -128,8 +140,10 @@
             }
         },
         "required": [
+            "id",
             "name",
-            "description"
+            "description",
+            "total_classes"
         ]
     },
     "DisciplineSummary": {
@@ -146,6 +160,10 @@
             "description": {
                 "type": "string",
                 "example": "Estudo de limites, derivadas e integrais."
+            },
+            "total_classes": {
+                "type": "integer",
+                "example": 40
             },
             "start_time": {
                 "type": "string",

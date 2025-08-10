@@ -27,6 +27,10 @@ const DisciplineSchema = new Schema({
         type: String,
         trim: true
     },
+    total_classes: {
+        type: Number,
+        required: true
+    },
     classroom_id: {
         type: Types.ObjectId,
         ref: 'Classroom',
@@ -54,7 +58,6 @@ const DisciplineSchema = new Schema({
     }
 });
 
-// Middleware para atualizar automaticamente updated_at
 DisciplineSchema.pre('save', function (next) {
     this.updated_at = new Date();
     next();

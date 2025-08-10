@@ -14,6 +14,10 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
                 required_error: 'Description is required',
                 invalid_type_error: 'Description must be a string'
             }).min(1, 'Description cannot be empty'),
+            total_classes: z.number({
+                required_error: 'Total classes is required',
+                invalid_type_error: 'Total classes must be a number'
+            }).int().positive('Total classes must be a positive integer'),
         });
 
         const result = DisciplineSchema.safeParse(data);
