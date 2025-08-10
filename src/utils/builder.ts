@@ -1,7 +1,19 @@
-import { IDiscipline, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineReport, IDisciplineSummary, Schedule } from "../intefaces/entities/Discipline";
 import { IClassroom } from "../intefaces/entities/Classroom";
 import { IUser } from "../intefaces/entities/User";
 import { BasicServiceResponse } from "../intefaces/types";
+
+export const buildDisciplineItemSummary = (data: any): IDisciplineSummary => {
+    return {
+        id: data?._id.toString(),
+        name: data?.name,
+        description: data?.description,
+        start_time: data?.schedule?.start_time || null,
+        end_time: data?.schedule?.end_time || null,
+        classroom_name: data?.classroom_id?.name || null,
+        teacher_name: data?.teacher_id?.name || null,
+    }
+}
 
 export const buildUser = (user: any): IUser => ({
     id: user?.id,

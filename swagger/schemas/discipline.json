@@ -131,5 +131,53 @@
             "name",
             "description"
         ]
+    },
+    "DisciplineSummary": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "example": "60f7d5c8c2a4e53f8c4f0d1b"
+            },
+            "name": {
+                "type": "string",
+                "example": "Cálculo I"
+            },
+            "description": {
+                "type": "string",
+                "example": "Estudo de limites, derivadas e integrais."
+            },
+            "start_time": {
+                "type": "string",
+                "example": "08:00"
+            },
+            "end_time": {
+                "type": "string",
+                "example": "10:00"
+            },
+            "classroom_name": {
+                "type": "string",
+                "example": "Sala 101"
+            },
+            "teacher_name": {
+                "type": "string",
+                "example": "Prof. Dr. João da Silva"
+            }
+        }
+    },
+    "DisciplineDayReport": {
+        "type": "object",
+        "properties": {
+            "count": {
+                "type": "integer",
+                "example": 1
+            },
+            "classes": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/DisciplineSummary"
+                }
+            }
+        }
     }
 }

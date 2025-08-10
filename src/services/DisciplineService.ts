@@ -21,6 +21,14 @@ class DisciplineService implements IDisciplineService {
         this.classroomRepository = data.classroomRepository;
     }
 
+    async findByDayOfWeek(day: number, session: SessionType): Promise<BasicServiceResponse> {
+        const disciplines = await this.disciplineRepository.findByDayOfWeek(day, session);
+        return buildServiceResponse(200, null, {
+            count: disciplines.length,
+            classes: disciplines
+        });
+    }
+
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
         const discipline = await this.disciplineRepository.create(data);
         return discipline;

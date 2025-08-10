@@ -1,9 +1,10 @@
 import { SessionType } from "../config/IntDatabase";
-import { IDisciplineCreate, IDiscipline, IDisciplineReport, Schedule } from "../entities/Discipline";
+import { IDisciplineCreate, IDiscipline, IDisciplineReport, Schedule, IDisciplineSummary } from "../entities/Discipline";
 
 export interface IDisciplineRepository {
     create(data: IDisciplineCreate): Promise<IDiscipline>;
     findById(id: string): Promise<IDiscipline | null>;
+    findByDayOfWeek(day: number, session: SessionType): Promise<IDisciplineSummary[]>;
     subscribeStudentToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     unsubscribeStudentFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     subscribeTeacherToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;

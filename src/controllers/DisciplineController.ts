@@ -6,6 +6,7 @@ import { IntNotificationService } from "../intefaces/services/IntNotificationSer
 import { IntUserService } from "../intefaces/services/IntUserService";
 import { IntDisciplineValidator } from "../intefaces/validators/IntDisciplineValidator";
 import { Request, Response } from "express";
+import { DisciplineGetByDayZodValidator } from "../validators/DisciplineGetByDayZodValidator";
 
 interface DataProps {
     disciplineService: IDisciplineService;
@@ -31,6 +32,26 @@ class DisciplineController {
         this.validator = data.validator;
         this.userService = data.userService;
         this.databaseService = data.databaseService;
+    }
+
+    async getByDayOfWeek(req: Request, res: Response): Promise<any> {
+        try {
+            const { success, error, data } = DisciplineGetByDayZodValidator.validate(req.params);
+            if (!success) {
+                return res.status(400).json({
+                    errors: error
+                });
+            }
+
+            const result = await this.disciplineService.findByDayOfWeek(data.day, null);
+
+            return res.status(200).json(result.data);
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
     }
 
     async create(req: any, res: any) {

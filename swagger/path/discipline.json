@@ -82,6 +82,60 @@
             }
         }
     },
+    "/discipline/day/{day}": {
+        "get": {
+            "summary": "Busca disciplinas por dia da semana",
+            "description": "Este endpoint é utilizado para buscar as disciplinas agendadas para um dia específico da semana. Use um número de 0 (Domingo) a 6 (Sábado).",
+            "tags": [
+                "Horário da Disciplina"
+            ],
+            "parameters": [
+                {
+                    "name": "day",
+                    "in": "path",
+                    "description": "Dia da semana (0-6)",
+                    "required": true,
+                    "schema": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 6
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DisciplineDayReport"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Dia da semana inválido",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "/discipline/{id}": {
         "delete": {
             "summary": "Deletar disciplina",

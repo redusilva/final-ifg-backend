@@ -1,11 +1,21 @@
 import { Types } from "mongoose";
 import { SessionType } from "../intefaces/config/IntDatabase";
-import { IDiscipline, IDisciplineCreate, IDisciplineReport, Schedule } from "../intefaces/entities/Discipline";
+import { IDiscipline, IDisciplineCreate, IDisciplineReport, IDisciplineSummary, Schedule } from "../intefaces/entities/Discipline";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { DisciplineModel } from "../models/DisciplineMongooseModel";
-import { buildDiscipline, buildDisciplineItemReport, buildSchedule } from "../utils/builder";
+import { buildDiscipline, buildDisciplineItemReport, buildDisciplineItemSummary, buildSchedule } from "../utils/builder"; // Importado
 
 class DisciplineMongooseRepository implements IDisciplineRepository {
+    async findByDayOfWeek(day: number, session: SessionType): Promise<IDisciplineSummary[]> {
+        const disciplines = await DisciplineModel
+            .find({ "schedule.day_of_week": day })
+            .populate('teacher_id', 'name')
+            .populate('classroom_id', 'name')
+            .session(session);
+
+        return disciplines?.map(discipline => buildDisciplineItemSummary(discipline)) || [];
+    }
+
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
         const discipline = new DisciplineModel(data);
         await discipline.save();

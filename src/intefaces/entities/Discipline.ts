@@ -6,6 +6,16 @@ export interface Schedule {
     end_time: String;    // formato 'HH:mm'
 };
 
+export interface IDisciplineSummary {
+    id: string;
+    name: string;
+    description: string;
+    start_time: string;
+    end_time: string;
+    classroom_name: string | null;
+    teacher_name: string | null;
+}
+
 export interface IDiscipline {
     id: string;
     name: string;

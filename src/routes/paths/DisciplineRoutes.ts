@@ -4,6 +4,11 @@ import { validateMongoIdParams } from '../../middlewares/validateMongoIdParams';
 
 const router = express.Router();
 
+router.get(
+    '/day/:day',
+    (req, res) => disciplineController.getByDayOfWeek(req, res)
+);
+
 router.post(
     '/schedule/:id',
     validateMongoIdParams,
