@@ -25,7 +25,7 @@ export interface IDiscipline {
     classroom_id: string | null;
     teacher_id: string | null;
     students: string[];
-    schedule: Schedule | null;
+    schedule: Schedule[] | null;
     created_at: Date;
     updated_at: Date;
 }

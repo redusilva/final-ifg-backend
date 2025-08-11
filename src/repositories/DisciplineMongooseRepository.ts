@@ -1,11 +1,31 @@
+// src/repositories/DisciplineMongooseRepository.ts
+
 import { Types } from "mongoose";
 import { SessionType } from "../intefaces/config/IntDatabase";
 import { IDiscipline, IDisciplineCreate, IDisciplineReport, IDisciplineSummary, Schedule } from "../intefaces/entities/Discipline";
 import { IDisciplineRepository } from "../intefaces/repositories/IDisciplineRepository";
 import { DisciplineModel } from "../models/DisciplineMongooseModel";
-import { buildDiscipline, buildDisciplineItemReport, buildDisciplineItemSummary, buildSchedule } from "../utils/builder"; // Importado
+import { buildDiscipline, buildDisciplineItemReport, buildDisciplineItemSummary } from "../utils/builder";
 
 class DisciplineMongooseRepository implements IDisciplineRepository {
+    async createSchedule(id: string, data: Schedule, session: SessionType): Promise<IDiscipline | null> {
+        const discipline = await DisciplineModel.findById(id).session(session);
+
+        if (!discipline) {
+            return null;
+        }
+
+        if (!discipline.schedule || !Array.isArray(discipline.schedule)) {
+            discipline.schedule = [];
+        }
+
+        discipline.schedule.push(data);
+
+        await discipline.save({ session });
+
+        return buildDiscipline(discipline);
+    }
+
     async findByDayOfWeek(day: number, session: SessionType): Promise<IDisciplineSummary[]> {
         const disciplines = await DisciplineModel
             .find({ "schedule.day_of_week": day })
@@ -13,13 +33,18 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
             .populate('classroom_id', 'name')
             .session(session);
 
-        return disciplines?.map(discipline => buildDisciplineItemSummary(discipline)) || [];
+        return disciplines.flatMap(discipline => {
+            const summaries = buildDisciplineItemSummary(discipline);
+            return summaries.filter(summary => {
+                const scheduleItem = discipline.schedule.find(s => s.start_time === summary.start_time);
+                return scheduleItem?.day_of_week === day;
+            });
+        });
     }
 
     async create(data: IDisciplineCreate): Promise<IDiscipline> {
         const discipline = new DisciplineModel(data);
         await discipline.save();
-
         return buildDiscipline(discipline);
     }
 
@@ -28,63 +53,30 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         if (!discipline) {
             return null;
         }
-
         return buildDiscipline(discipline);
     }
 
     async subscribeStudentToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline> {
-        const discipline = await DisciplineModel.findById(disciplineId).session(session);
-        if (!discipline) {
-            throw new Error('Discipline not found');
-        }
-
-        discipline.students.push(new Types.ObjectId(userId));
-
-        await discipline.save({ session });
-
+        const discipline = await DisciplineModel.findByIdAndUpdate(disciplineId, { $push: { students: userId } }, { new: true, session });
+        if (!discipline) throw new Error('Discipline not found');
         return buildDiscipline(discipline);
     }
 
-    async unsubscribeStudentFromDiscipline(
-        disciplineId: string,
-        userId: string,
-        session: SessionType
-    ): Promise<IDiscipline> {
-        const discipline = await DisciplineModel.findById(disciplineId).session(session);
-        if (!discipline) {
-            throw new Error('Discipline not found');
-        }
-
-        discipline.students.pull(new Types.ObjectId(userId));
-
-        await discipline.save({ session });
-
+    async unsubscribeStudentFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline> {
+        const discipline = await DisciplineModel.findByIdAndUpdate(disciplineId, { $pull: { students: userId } }, { new: true, session });
+        if (!discipline) throw new Error('Discipline not found');
         return buildDiscipline(discipline);
     }
 
     async subscribeTeacherToDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline> {
-        const discipline = await DisciplineModel.findById(disciplineId).session(session);
-        if (!discipline) {
-            throw new Error('Discipline not found');
-        }
-
-        discipline.teacher_id = userId;
-
-        await discipline.save({ session });
-
+        const discipline = await DisciplineModel.findByIdAndUpdate(disciplineId, { teacher_id: userId }, { new: true, session });
+        if (!discipline) throw new Error('Discipline not found');
         return buildDiscipline(discipline);
     }
 
     async unsubscribeTeacherFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline> {
-        const discipline = await DisciplineModel.findById(disciplineId).session(session);
-        if (!discipline) {
-            throw new Error('Discipline not found');
-        }
-
-        discipline.teacher_id = null;
-
-        await discipline.save({ session });
-
+        const discipline = await DisciplineModel.findByIdAndUpdate(disciplineId, { $unset: { teacher_id: 1 } }, { new: true, session });
+        if (!discipline) throw new Error('Discipline not found');
         return buildDiscipline(discipline);
     }
 
@@ -95,7 +87,6 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
             .populate('teacher_id')
             .populate('classroom_id')
             .session(session);
-
         return disciplines?.map(discipline => buildDisciplineItemReport(discipline)) || [];
     }
 
@@ -103,50 +94,23 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         await DisciplineModel.findByIdAndDelete(id).session(session);
     }
 
-    async createSchedule(id: string, data: Schedule, session: SessionType): Promise<Schedule> {
-        const discipline = await DisciplineModel.findById(id).session(session);
-        if (!discipline) {
-            throw new Error("Discipline not found")
-        }
-
-        discipline.schedule = data;
-
-        await discipline?.save({ session })
-        return buildSchedule(discipline.schedule);
-    }
-
-    async deleteSchedule(id: string, session: SessionType): Promise<void> {
-        const discipline = await DisciplineModel.findById(id).session(session);
-        if (!discipline) {
-            throw new Error("Discipline not found")
-        }
-
-        discipline.schedule = null;
-
-        await discipline.save({ session })
+    async deleteSchedule(id: string, scheduleData: Partial<Schedule>, session: SessionType): Promise<IDiscipline | null> {
+        return DisciplineModel.findByIdAndUpdate(
+            id,
+            { $pull: { schedule: { start_time: scheduleData.start_time, day_of_week: scheduleData.day_of_week } } },
+            { new: true, session }
+        );
     }
 
     async registerClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline> {
-        const discipline = await DisciplineModel.findById(disciplineId).session(session);
-        if (!discipline) {
-            throw new Error("Discipline not found")
-        }
-
-        discipline.classroom_id = classroomId;
-
-        await discipline.save({ session })
+        const discipline = await DisciplineModel.findByIdAndUpdate(disciplineId, { classroom_id: classroomId }, { new: true, session });
+        if (!discipline) throw new Error("Discipline not found");
         return buildDiscipline(discipline);
     }
 
     async removeClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline> {
-        const discipline = await DisciplineModel.findById(disciplineId).session(session);
-        if (!discipline) {
-            throw new Error("Discipline not found")
-        }
-
-        discipline.classroom_id = null;
-
-        await discipline.save({ session })
+        const discipline = await DisciplineModel.findByIdAndUpdate(disciplineId, { $unset: { classroom_id: 1 } }, { new: true, session });
+        if (!discipline) throw new Error("Discipline not found");
         return buildDiscipline(discipline);
     }
 
@@ -154,7 +118,7 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         await DisciplineModel
             .updateMany(
                 { classroom_id: classroomId },
-                { classroom_id: null }
+                { $unset: { classroom_id: 1 } }
             )
             .session(session);
     }
@@ -163,13 +127,20 @@ class DisciplineMongooseRepository implements IDisciplineRepository {
         await Promise.all([
             DisciplineModel.updateMany(
                 { teacher_id: userId },
-                { $set: { teacher_id: null } }
+                { $unset: { teacher_id: 1 } }
             ).session(session),
             DisciplineModel.updateMany(
                 { students: userId },
                 { $pull: { students: userId } }
             ).session(session)
         ]);
+    }
+
+    async findAllByDayOfWeek(day: number, session: SessionType): Promise<IDiscipline[]> {
+        const disciplines = await DisciplineModel
+            .find({ "schedule.day_of_week": day })
+            .session(session);
+        return disciplines?.map(discipline => buildDiscipline(discipline)) || [];
     }
 }
 

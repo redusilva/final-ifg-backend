@@ -22,7 +22,7 @@ router.delete(
 );
 
 router.delete(
-    '/:disciplineId/students/:teacherId',
+    '/:disciplineId/students/:studentId',
     validateMongoIdParams,
     (req, res) => disciplineController.removeStudent(req, res)
 );

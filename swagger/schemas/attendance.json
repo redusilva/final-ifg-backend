@@ -1,0 +1,59 @@
+{
+    "CheckPresence": {
+        "type": "object",
+        "properties": {
+            "student_id": {
+                "type": "string",
+                "description": "ID do aluno.",
+                "example": "60f7d5c8c2a4e53f8c4f0d1b"
+            },
+            "discipline_id": {
+                "type": "string",
+                "description": "ID da disciplina.",
+                "example": "60f7d5c8c2a4e53f8c4f0d1c"
+            },
+            "is_present": {
+                "type": "boolean",
+                "description": "Indica se o aluno está presente no momento da checagem.",
+                "example": true
+            },
+            "start_time": {
+                "type": "string",
+                "description": "Horário de início da aula no formato HH:mm.",
+                "example": "08:00"
+            },
+            "class_date": {
+                "type": "string",
+                "format": "date",
+                "description": "Data da aula no formato YYYY-MM-DD.",
+                "example": "2025-08-11"
+            }
+        },
+        "required": [
+            "student_id",
+            "discipline_id",
+            "is_present",
+            "start_time",
+            "class_date"
+        ]
+    },
+    "CheckPresenceResponse": {
+        "type": "object",
+        "properties": {
+            "status": {
+                "type": "string",
+                "enum": [
+                    "PENDING",
+                    "PRESENT"
+                ],
+                "description": "Indica o estado atual da presença do aluno na aula. **PENDING**: O aluno iniciou o processo de checagem, mas ainda não atingiu os 3 pontos necessários. **PRESENT**: O aluno completou com sucesso os 3 pontos e a presença está confirmada.",
+                "example": "PENDING"
+            },
+            "checks": {
+                "type": "integer",
+                "description": "Número de checagens de presença bem-sucedidas.",
+                "example": 1
+            }
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "/attendance/check": {
+        "post": {
+            "summary": "Registra um ponto de presença",
+            "description": "Este endpoint é utilizado para registrar um único ponto de verificação de presença de um aluno em uma aula específica. São necessários 3 pontos com 'is_present: true' para confirmar a presença na aula.",
+            "tags": [
+                "Presença"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CheckPresence"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Ponto de presença registrado com sucesso.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CheckPresenceResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Dados inválidos.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

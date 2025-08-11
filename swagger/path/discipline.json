@@ -2,7 +2,7 @@
     "/discipline": {
         "post": {
             "summary": "Criar disciplina",
-            "description": "Este endpoint é utilizado para cadastrar disciplinas. <br /> <br /> OBS: Essa rota permite criar apenas a disciplina, sem vincular professores ou alunos, então na resposta os campos 'students', 'teacher_id' e 'schedule' sempre virão vazios ou nulos.",
+            "description": "Este endpoint é utilizado para cadastrar disciplinas. <br /> <br /> OBS: Essa rota permite criar apenas a disciplina, sem vincular professores ou alunos, então na resposta os campos 'students', 'teacher_id' e 'schedule' sempre virão como arrays vazios.",
             "tags": [
                 "Disciplina"
             ],
@@ -461,7 +461,7 @@
                     }
                 },
                 {
-                    "name": "studentId",
+                    "name": "teacherId",
                     "in": "path",
                     "description": "ID do professor",
                     "required": true,
@@ -492,7 +492,7 @@
                     }
                 },
                 "404": {
-                    "description": "Disciplina ou aluno não encontrado!",
+                    "description": "Disciplina ou professor não encontrado!",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -683,12 +683,12 @@
                 }
             },
             "responses": {
-                "200": {
+                "201": {
                     "description": "Operação realizada com sucesso",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Schedule"
+                                "$ref": "#/components/schemas/Discipline"
                             }
                         }
                     }
@@ -717,7 +717,7 @@
         },
         "delete": {
             "summary": "Deletar horário de aula",
-            "description": "Este endpoint é utilizado para deletar o horário e o dia de aula da disciplina",
+            "description": "Este endpoint é utilizado para deletar um horário específico da disciplina. É necessário enviar no corpo da requisição o 'day_of_week' e o 'start_time' para identificar qual horário remover.",
             "tags": [
                 "Horário da Disciplina"
             ],
@@ -732,18 +732,33 @@
                     }
                 }
             ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "day_of_week": {
+                                    "type": "number",
+                                    "example": 1
+                                },
+                                "start_time": {
+                                    "type": "string",
+                                    "example": "08:00"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "responses": {
                 "200": {
                     "description": "Operação realizada com sucesso",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "message": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Discipline"
                             }
                         }
                     }

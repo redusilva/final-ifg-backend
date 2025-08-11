@@ -34,7 +34,7 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
             classroom_id: null,
             teacher_id: null,
             students: [],
-            schedule: null
+            schedule: []
         }
 
         return {
@@ -119,6 +119,29 @@ export class DisciplineZodValidator implements IntDisciplineValidator {
         });
 
         const result = RegisterScheduleSchema.safeParse(data);
+        if (!result.success) {
+            return {
+                success: false,
+                error: result.error,
+                data: null
+            }
+        }
+
+        return {
+            success: true,
+            error: null,
+            data: result.data
+        }
+    }
+
+    validateDeleteSchedule(data: any): IntValidatorsResponse {
+        const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        const DeleteScheduleSchema = z.object({
+            day_of_week: z.number().min(0).max(6),
+            start_time: z.string().regex(timeRegex, { message: 'start_time must be in HH:mm format' }),
+        });
+
+        const result = DeleteScheduleSchema.safeParse(data);
         if (!result.success) {
             return {
                 success: false,

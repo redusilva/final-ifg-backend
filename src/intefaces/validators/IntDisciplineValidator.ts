@@ -5,4 +5,5 @@ export interface IntDisciplineValidator {
     validateRegisterStudents: (data: any) => IntValidatorsResponse;
     validateRegisterTeacher: (data: any) => IntValidatorsResponse;
     validateRegisterSchedule(data: any): IntValidatorsResponse;
+    validateDeleteSchedule(data: any): IntValidatorsResponse;
 }

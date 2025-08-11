@@ -26,15 +26,15 @@
         "properties": {
             "day_of_week": {
                 "type": "number",
-                "example": 0
+                "example": 1
             },
             "start_time": {
                 "type": "string",
-                "example": "HH:mm"
+                "example": "08:00"
             },
             "end_time": {
                 "type": "string",
-                "example": "HH:mm"
+                "example": "10:00"
             }
         },
         "required": [
@@ -78,7 +78,10 @@
                 }
             },
             "schedule": {
-                "$ref": "#/components/schemas/Schedule"
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                }
             },
             "created_at": {
                 "type": "string",
@@ -128,7 +131,10 @@
                 }
             },
             "schedule": {
-                "$ref": "#/components/schemas/Schedule"
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                }
             },
             "created_at": {
                 "type": "string",

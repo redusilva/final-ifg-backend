@@ -1,20 +1,9 @@
 import { Schema, model, Types } from 'mongoose';
 
 const ScheduleSchema = new Schema({
-    day_of_week: {
-        type: Number, // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
-        required: true,
-        min: 0,
-        max: 6
-    },
-    start_time: {
-        type: String, // formato 'HH:mm'
-        required: true
-    },
-    end_time: {
-        type: String, // formato 'HH:mm'
-        required: true
-    }
+    day_of_week: { type: Number, required: true, min: 0, max: 6 },
+    start_time: { type: String, required: true },
+    end_time: { type: String, required: true }
 }, { _id: false });
 
 const DisciplineSchema = new Schema({
@@ -41,13 +30,11 @@ const DisciplineSchema = new Schema({
         ref: 'User',
         required: false
     },
-    students: [
-        {
-            type: Types.ObjectId,
-            ref: 'User'
-        }
-    ],
-    schedule: ScheduleSchema,
+    students: [{ type: Types.ObjectId, ref: 'User' }],
+    schedule: {
+        type: [ScheduleSchema],
+        default: []
+    },
     created_at: {
         type: Date,
         default: Date.now

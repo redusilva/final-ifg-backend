@@ -11,10 +11,11 @@ export interface IDisciplineRepository {
     unsubscribeTeacherFromDiscipline(disciplineId: string, userId: string, session: SessionType): Promise<IDiscipline>;
     getAll(session?: SessionType): Promise<IDisciplineReport[]>;
     deleteById(id: string, session: SessionType): Promise<void>;
-    createSchedule(id: string, data: Schedule, session: SessionType): Promise<Schedule>;
-    deleteSchedule(id: string, session: SessionType): Promise<void>;
+    createSchedule(id: string, data: Schedule, session: SessionType): Promise<IDiscipline | null>;
+    deleteSchedule(id: string, scheduleData: Partial<Schedule>, session: SessionType): Promise<IDiscipline | null>;
     registerClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline>;
     removeClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<IDiscipline>;
     removeClassroomFromAllDisciplines(classroomId: string, session: SessionType): Promise<void>;
     removeUserFromAllDisciplines(userId: string, session: SessionType): Promise<void>;
+    findAllByDayOfWeek(day: number, session: SessionType): Promise<IDiscipline[]>;
 }

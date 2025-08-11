@@ -296,8 +296,8 @@ class DisciplineController {
             }
 
             const result = await this.disciplineService.createSchedule(id, data, null);
-            if (result.status === 200) {
-                return res.status(200).json(result.data);
+            if (result.status === 201) {
+                return res.status(201).json(result.data);
             }
 
             return res.status(result.status).json({
@@ -314,12 +314,18 @@ class DisciplineController {
     async deleteSchedule(req: any, res: any) {
         try {
             const { id } = req.params;
+            const { success, error, data: scheduleData } = this.validator.validateDeleteSchedule(req.body);
 
-            const result = await this.disciplineService.deleteSchedule(id, null);
-            if (result.status === 200) {
-                return res.status(200).json({
-                    message: 'Schedule deleted'
+            if (!success) {
+                return res.status(400).json({
+                    errors: error
                 });
+            }
+
+            const result = await this.disciplineService.deleteSchedule(id, scheduleData, null);
+
+            if (result.status === 200) {
+                return res.status(200).json(result.data);
             }
 
             return res.status(result.status).json({

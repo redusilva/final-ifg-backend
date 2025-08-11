@@ -6,6 +6,7 @@ import { swaggerConfig } from './confg/swagger';
 import swaggerUi from 'swagger-ui-express';
 import { mongooseContainer } from './container/MongooseContainer';
 import authMiddleware from './middlewares/auth';
+import { scheduleHourlyJob } from './jobs/finalizeAttendance';
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use(router);
 async function start() {
     try {
         await mongooseContainer.mongooseService.connect();
+
+        scheduleHourlyJob();
 
         app.listen(config.PORT, () => {
             console.log(`🚀 Servidor rodando na porta ${config.PORT}`);

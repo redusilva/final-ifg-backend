@@ -14,7 +14,7 @@ export interface IDisciplineService {
     getAll(session?: SessionType): Promise<IDisciplineReport[]>;
     deleteById(id: string, session: SessionType): Promise<void>;
     createSchedule(id: string, data: Schedule, session: SessionType): Promise<BasicServiceResponse>;
-    deleteSchedule(id: string, session: SessionType): Promise<BasicServiceResponse>;
+    deleteSchedule(id: string, scheduleData: Partial<Schedule>, session: SessionType): Promise<BasicServiceResponse>;
     registerClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<BasicServiceResponse>;
     removeClassroom(classroomId: string, disciplineId: string, session: SessionType): Promise<BasicServiceResponse>;
 }

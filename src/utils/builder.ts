@@ -2,19 +2,24 @@ import { IDiscipline, IDisciplineReport, IDisciplineSummary, Schedule } from "..
 import { IClassroom } from "../intefaces/entities/Classroom";
 import { IUser } from "../intefaces/entities/User";
 import { BasicServiceResponse } from "../intefaces/types";
+import { IAttendance } from "../intefaces/entities/Attendance";
 
-export const buildDisciplineItemSummary = (data: any): IDisciplineSummary => {
-    return {
-        id: data?._id.toString(),
-        name: data?.name,
-        description: data?.description,
-        total_classes: data.total_classes != null ? data.total_classes : null,
-        start_time: data?.schedule?.start_time || null,
-        end_time: data?.schedule?.end_time || null,
-        classroom_name: data?.classroom_id?.name || null,
-        teacher_name: data?.teacher_id?.name || null,
+export const buildDisciplineItemSummary = (discipline: any): IDisciplineSummary[] => {
+    if (!discipline || !discipline.schedule || discipline.schedule.length === 0) {
+        return [];
     }
-}
+
+    return discipline.schedule.map((scheduleItem: any) => ({
+        id: discipline._id.toString(),
+        name: discipline.name,
+        description: discipline.description,
+        total_classes: discipline.total_classes,
+        start_time: scheduleItem.start_time,
+        end_time: scheduleItem.end_time,
+        classroom_name: discipline.classroom_id?.name || null,
+        teacher_name: discipline.teacher_id?.name || null,
+    }));
+};
 
 export const buildDiscipline = (data: any): IDiscipline => {
     return {
@@ -84,3 +89,19 @@ export const buildClassroom = (classroom: any): IClassroom => {
         updated_at: classroom.updated_at,
     }
 }
+
+export const buildAttendance = (attendance: any): IAttendance | null => {
+    if (!attendance) return null;
+    return {
+        id: attendance.id || attendance._id.toString(),
+        studentId: attendance.studentId,
+        disciplineId: attendance.disciplineId,
+        classDate: attendance.classDate,
+        start_time: attendance.start_time,
+        status: attendance.status,
+        presenceChecks: attendance.presenceChecks,
+        checkTimestamps: attendance.checkTimestamps,
+        created_at: attendance.created_at,
+        updated_at: attendance.updated_at,
+    };
+};
