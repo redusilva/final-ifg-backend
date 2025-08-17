@@ -10,16 +10,15 @@ class AttendanceMongooseRepository implements IAttendanceRepository {
         return buildAttendance(record);
     }
 
-    async create(studentId: string, disciplineId: string, classDate: Date, startTime: string, session: SessionType): Promise<IAttendance> {
-        const newAttendance = new AttendanceModel({
-            studentId,
-            disciplineId,
-            classDate,
-            start_time: startTime,
+    async create(data: Partial<IAttendance>, session: SessionType): Promise<IAttendance> {
+        const newAttendanceData = {
+            ...data,
             presenceChecks: 1,
             checkTimestamps: [new Date()],
             status: 'PENDING'
-        });
+        };
+
+        const newAttendance = new AttendanceModel(newAttendanceData);
         await newAttendance.save({ session });
 
         const builtRecord = buildAttendance(newAttendance);

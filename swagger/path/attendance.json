@@ -1,7 +1,7 @@
 {
     "/attendance/check": {
         "post": {
-            "summary": "Registra um ponto de presença",
+            "summary": "Registra um ponto de presença do aluno",
             "description": "Este endpoint é utilizado para registrar um único ponto de verificação de presença de um aluno em uma aula específica. São necessários 3 pontos com 'is_present: true' para confirmar a presença na aula.",
             "tags": [
                 "Presença"
@@ -33,6 +33,77 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/attendance/check/teacher": {
+        "post": {
+            "summary": "Registra um ponto de presença do professor",
+            "description": "Este endpoint é utilizado para registrar um único ponto de verificação de presença de um professor em uma aula específica. São necessários 3 pontos com 'is_present: true' para confirmar a presença na aula.",
+            "tags": [
+                "Presença"
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CheckTeacherPresence"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Ponto de presença registrado com sucesso.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CheckPresenceResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Dados inválidos.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "403": {
+                    "description": "Professor não vinculado à disciplina.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OperationError"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Disciplina não encontrada.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotFoundError"
                             }
                         }
                     }

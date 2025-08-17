@@ -1,26 +1,21 @@
 import cron from 'node-cron';
 import { DisciplineModel } from '../models/DisciplineMongooseModel';
 import { AttendanceModel } from '../models/AttendanceMongooseModel';
+import { Types } from 'mongoose';
 
 async function processAbsences() {
     console.log('Running hourly job to process absences...');
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const currentTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+
     const processDate = new Date();
-    const dayOfWeek = processDate.getDay();
     processDate.setHours(0, 0, 0, 0);
 
     try {
-        const pendingResult = await AttendanceModel.updateMany(
-            { classDate: processDate, status: 'PENDING' },
-            { $set: { status: 'ABSENT' } }
-        );
-
-        if (pendingResult.modifiedCount > 0) {
-            console.log(`Updated ${pendingResult.modifiedCount} PENDING records to ABSENT.`);
-        }
-
         const disciplinesOfTheDay = await DisciplineModel.find({
             "schedule.day_of_week": dayOfWeek
-        }).select('students name');
+        }).select('students name schedule teacher_id');
 
         if (disciplinesOfTheDay.length === 0) {
             console.log(`No disciplines scheduled for day ${dayOfWeek}.`);
@@ -28,35 +23,85 @@ async function processAbsences() {
         }
 
         for (const discipline of disciplinesOfTheDay) {
-            if (!discipline.students || discipline.students.length === 0) {
+            if (!discipline.schedule || discipline.schedule.length === 0) {
                 continue;
             }
 
-            const studentsWithAttendanceRecord = await AttendanceModel.find({
-                disciplineId: discipline.id,
-                classDate: processDate
-            }).select('studentId');
+            const todaySchedules = discipline.schedule.filter(s => s.day_of_week === dayOfWeek && s.end_time <= currentTime);
 
-            const studentIdsWithRecord = new Set(
-                studentsWithAttendanceRecord.map(att => att.studentId.toString())
-            );
+            for (const scheduleItem of todaySchedules) {
+                const { start_time } = scheduleItem;
+                let teacherIsPresent = false;
 
-            const absentStudents = discipline.students
-                .map(id => id.toString())
-                .filter(studentId => !studentIdsWithRecord.has(studentId));
+                if (discipline.teacher_id) {
+                    const teacherAttendance = await AttendanceModel.findOne({
+                        teacherId: discipline.teacher_id,
+                        disciplineId: discipline._id,
+                        classDate: processDate,
+                        start_time: start_time,
+                        status: 'PRESENT'
+                    });
 
-            if (absentStudents.length > 0) {
-                const newAbsences = absentStudents.map(studentId => ({
-                    studentId,
-                    disciplineId: discipline.id,
+                    if (teacherAttendance) {
+                        teacherIsPresent = true;
+                    }
+                }
+
+                if (!teacherIsPresent) {
+                    console.log(`Class canceled for discipline ${discipline.name} at ${start_time} (teacher absent or not assigned). Deleting student attendance records.`);
+                    await AttendanceModel.deleteMany({
+                        disciplineId: discipline._id,
+                        classDate: processDate,
+                        start_time: start_time,
+                        studentId: { $exists: true }
+                    });
+                    continue;
+                }
+
+                await AttendanceModel.updateMany(
+                    {
+                        disciplineId: discipline._id,
+                        classDate: processDate,
+                        start_time: start_time,
+                        status: 'PENDING',
+                        studentId: { $exists: true }
+                    },
+                    { $set: { status: 'ABSENT' } }
+                );
+
+                if (!discipline.students || discipline.students.length === 0) {
+                    continue;
+                }
+
+                const studentsWithRecord = await AttendanceModel.find({
+                    disciplineId: discipline._id,
                     classDate: processDate,
-                    status: 'ABSENT',
-                    presenceChecks: 0,
-                    checkTimestamps: []
-                }));
+                    start_time: start_time,
+                    studentId: { $exists: true }
+                }).select('studentId');
 
-                await AttendanceModel.insertMany(newAbsences);
-                console.log(`Created ${newAbsences.length} new ABSENT records for discipline ${discipline.name}.`);
+                const studentIdsWithRecord = new Set(
+                    studentsWithRecord.map(att => att.studentId!.toString())
+                );
+
+                const absentStudents = discipline.students
+                    .map(id => id.toString())
+                    .filter(studentId => !studentIdsWithRecord.has(studentId));
+
+                if (absentStudents.length > 0) {
+                    const newAbsences = absentStudents.map(studentId => ({
+                        studentId: new Types.ObjectId(studentId),
+                        disciplineId: discipline._id,
+                        classDate: processDate,
+                        start_time,
+                        status: 'ABSENT',
+                        presenceChecks: 0,
+                        checkTimestamps: []
+                    }));
+
+                    await AttendanceModel.insertMany(newAbsences);
+                    console.log(`Created ${newAbsences.length} ABSENT records for discipline ${discipline.name} at ${start_time}.`);
+                }
             }
         }
     } catch (error) {

@@ -6,6 +6,7 @@ import { ILogService } from "../intefaces/services/ILogService";
 import { BasicServiceResponse } from "../intefaces/types";
 import { AttendanceModel } from "../models/AttendanceMongooseModel";
 import { buildServiceResponse } from "../utils/builder";
+import { Types } from "mongoose";
 
 interface Props {
     attendanceRepository: IAttendanceRepository;
@@ -44,8 +45,8 @@ class AttendanceService implements IAttendanceService {
         }
 
         let attendanceRecord = await this.attendanceRepository.findOne({
-            studentId,
-            disciplineId,
+            studentId: new Types.ObjectId(studentId),
+            disciplineId: new Types.ObjectId(disciplineId),
             classDate: classDate,
             start_time: startTime
         }, session);
@@ -56,16 +57,82 @@ class AttendanceService implements IAttendanceService {
             }
             attendanceRecord = await this.attendanceRepository.incrementCheck(attendanceRecord.id, session);
         } else {
-            attendanceRecord = await this.attendanceRepository.create(studentId, disciplineId, classDate, startTime, session);
+            attendanceRecord = await this.attendanceRepository.create({
+                studentId: new Types.ObjectId(studentId),
+                disciplineId: new Types.ObjectId(disciplineId),
+                classDate,
+                start_time: startTime
+            }, session);
         }
 
-        if (attendanceRecord && attendanceRecord.presenceChecks === 3) {
+        if (attendanceRecord && attendanceRecord.presenceChecks >= 3) {
             await AttendanceModel.updateOne(
                 { _id: attendanceRecord.id },
                 { $set: { status: 'PRESENT' } }
             ).session(session);
 
             this.logService.createLog(`Student ${studentId} marked as PRESENT for discipline ${disciplineId} at ${startTime}`, 'info');
+
+            return buildServiceResponse(200, null, { status: 'PRESENT', checks: 3 });
+        }
+
+        return buildServiceResponse(200, null, {
+            status: attendanceRecord?.status || 'PENDING',
+            checks: attendanceRecord?.presenceChecks || 0
+        });
+    }
+
+    async checkTeacherPresence(teacherId: string, disciplineId: string, isPresent: boolean, startTime: string, classDate: Date, session: SessionType): Promise<BasicServiceResponse> {
+        if (!isPresent) {
+            return buildServiceResponse(200, null, { message: 'Check received, no action needed.' });
+        }
+
+        const discipline = await this.disciplineRepository.findById(disciplineId);
+        if (!discipline) {
+            return buildServiceResponse(404, "Discipline not found", null);
+        }
+
+        if (discipline.teacher_id?.toString() !== teacherId) {
+            return buildServiceResponse(403, "This teacher is not assigned to this discipline.", null);
+        }
+
+        const dayOfWeek = classDate.getUTCDay() - 1; // Adjusting to make Sunday=6
+        const isValidSchedule = discipline.schedule?.some(
+            s => s.day_of_week === dayOfWeek && s.start_time === startTime
+        );
+
+        if (!isValidSchedule) {
+            return buildServiceResponse(400, `No class scheduled for this discipline at ${startTime} on this date.`, null);
+        }
+
+        let attendanceRecord = await this.attendanceRepository.findOne({
+            teacherId: new Types.ObjectId(teacherId),
+            disciplineId: new Types.ObjectId(disciplineId),
+            classDate: classDate,
+            start_time: startTime
+        }, session);
+
+        if (attendanceRecord) {
+            if (attendanceRecord.presenceChecks >= 3) {
+                return buildServiceResponse(200, null, { status: 'PRESENT', checks: attendanceRecord.presenceChecks });
+            }
+            attendanceRecord = await this.attendanceRepository.incrementCheck(attendanceRecord.id, session);
+        } else {
+            attendanceRecord = await this.attendanceRepository.create({
+                teacherId: new Types.ObjectId(teacherId),
+                disciplineId: new Types.ObjectId(disciplineId),
+                classDate,
+                start_time: startTime
+            }, session);
+        }
+
+        if (attendanceRecord && attendanceRecord.presenceChecks >= 3) {
+            await AttendanceModel.updateOne(
+                { _id: attendanceRecord.id },
+                { $set: { status: 'PRESENT' } }
+            ).session(session);
+
+            this.logService.createLog(`Teacher ${teacherId} marked as PRESENT for discipline ${disciplineId} at ${startTime}`, 'info');
 
             return buildServiceResponse(200, null, { status: 'PRESENT', checks: 3 });
         }
@@ -99,10 +166,13 @@ class AttendanceService implements IAttendanceService {
                 const studentsWithRecord = await this.attendanceRepository.find({
                     disciplineId: discipline.id,
                     classDate: processDate,
-                    start_time
+                    start_time,
+                    studentId: { $exists: true }
                 }, 'studentId', session);
 
-                const studentIdsWithRecord = new Set(studentsWithRecord.map(att => att.studentId.toString()));
+                const studentIdsWithRecord = new Set(
+                    studentsWithRecord.map(att => att.studentId!.toString())
+                );
 
                 const absentStudents = discipline.students
                     .map(id => id.toString())
@@ -110,8 +180,8 @@ class AttendanceService implements IAttendanceService {
 
                 if (absentStudents.length > 0) {
                     const newAbsences = absentStudents.map(studentId => ({
-                        studentId,
-                        disciplineId: discipline.id,
+                        studentId: new Types.ObjectId(studentId),
+                        disciplineId: new Types.ObjectId(discipline.id),
                         classDate: processDate,
                         start_time,
                         status: 'ABSENT',

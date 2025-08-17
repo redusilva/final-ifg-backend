@@ -2,7 +2,8 @@ import { Types } from 'mongoose';
 
 export interface IAttendance {
     id: string;
-    studentId: Types.ObjectId;
+    studentId?: Types.ObjectId;
+    teacherId?: Types.ObjectId;
     disciplineId: Types.ObjectId;
     classDate: Date;
     start_time: string;

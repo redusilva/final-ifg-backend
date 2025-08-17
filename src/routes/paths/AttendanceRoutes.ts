@@ -9,4 +9,9 @@ router.post(
     (req, res): Promise<any> => attendanceController.checkPresence(req, res)
 );
 
+router.post(
+    '/check/teacher',
+    (req, res): Promise<any> => attendanceController.checkTeacherPresence(req, res)
+);
+
 export default router;

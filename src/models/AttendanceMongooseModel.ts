@@ -4,7 +4,12 @@ const AttendanceSchema = new Schema({
     studentId: {
         type: Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
+    },
+    teacherId: {
+        type: Types.ObjectId,
+        ref: 'User',
+        required: false
     },
     disciplineId: {
         type: Types.ObjectId,
@@ -43,6 +48,16 @@ const AttendanceSchema = new Schema({
     versionKey: false
 });
 
-AttendanceSchema.index({ studentId: 1, disciplineId: 1, classDate: 1, start_time: 1 }, { unique: true });
+AttendanceSchema.index({ studentId: 1, disciplineId: 1, classDate: 1, start_time: 1 }, { unique: true, partialFilterExpression: { studentId: { $exists: true } } });
+AttendanceSchema.index({ teacherId: 1, disciplineId: 1, classDate: 1, start_time: 1 }, { unique: true, partialFilterExpression: { teacherId: { $exists: true } } });
+
+
+AttendanceSchema.pre('validate', function (next) {
+    if (!this.studentId && !this.teacherId) {
+        next(new Error('Attendance record must have either a studentId or a teacherId.'));
+    } else {
+        next();
+    }
+});
 
 export const AttendanceModel = model('Attendance', AttendanceSchema);

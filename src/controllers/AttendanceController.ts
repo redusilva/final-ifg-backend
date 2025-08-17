@@ -36,7 +36,39 @@ class AttendanceController {
 
             const result = await this.attendanceService.checkPresence(studentId, disciplineId, isPresent, startTime, classDate, session);
 
-            // Adicionado tratamento para o caso de 'result' ser nulo
+            if (!result) {
+                await this.databaseService.commitTransaction(session);
+                return res.status(200).json({ message: 'Check received, no action needed.' });
+            }
+
+            if (result.status !== 200) {
+                await this.databaseService.rollbackTransaction(session);
+                return res.status(result.status as number).json({ error: result.error });
+            }
+
+            await this.databaseService.commitTransaction(session);
+
+            return res.status(200).json(result.data);
+
+        } catch (error: any) {
+            await this.databaseService.rollbackTransaction(session);
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    async checkTeacherPresence(req: Request, res: Response) {
+        const validationResult = this.validator.validateCheckTeacherPresence(req.body);
+        if (!validationResult.success) {
+            return res.status(400).json({ errors: validationResult.error });
+        }
+
+        const session = await this.databaseService.startTransaction();
+        try {
+            const { teacherId, disciplineId, isPresent, startTime, classDate } = validationResult.data;
+
+            const result = await this.attendanceService.checkTeacherPresence(teacherId, disciplineId, isPresent, startTime, classDate, session);
+
             if (!result) {
                 await this.databaseService.commitTransaction(session);
                 return res.status(200).json({ message: 'Check received, no action needed.' });

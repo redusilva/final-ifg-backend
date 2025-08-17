@@ -95,6 +95,7 @@ export const buildAttendance = (attendance: any): IAttendance | null => {
     return {
         id: attendance.id || attendance._id.toString(),
         studentId: attendance.studentId,
+        teacherId: attendance.teacherId,
         disciplineId: attendance.disciplineId,
         classDate: attendance.classDate,
         start_time: attendance.start_time,
