@@ -22,6 +22,8 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig));
 app.use(authMiddleware);
 app.use(router);
 
+app.set("trust proxy", true);
+
 async function start() {
     try {
         await mongooseContainer.mongooseService.connect();

@@ -9,6 +9,8 @@ const envSchema = zod.object({
     PORT: zod.string().regex(/^\d+$/).transform(Number),
     MONGO_URI: zod.string().url(),
     AUTH_SERVICE_URL: zod.string().url(),
+    IP_CHECKER_URL: zod.string().url(),
+    TUNNEL_CHECKER_URL: zod.string().url(),
 });
 
 const env = envSchema.safeParse(process.env);

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { validateToken } from '../utils/auth';
+import { validateIP, validateTunnel } from '../utils/ip';
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const token = req.headers['authorization']?.split(' ')[1];
@@ -12,6 +13,16 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction): 
         const isValid = await validateToken(token);
         if (!isValid) {
             return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+        }
+
+        const clientIp = req.ip as string;
+        const cleanIp = clientIp.replace("::ffff:", "");
+
+        console.log("IP detectado:", cleanIp);
+        const isValidIp = await validateIP(cleanIp);
+        const isValidTunnel = await validateTunnel(cleanIp);
+        if (!isValidIp || !isValidTunnel) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid IP' });
         }
 
         next();
