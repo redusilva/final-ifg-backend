@@ -27,4 +27,10 @@ router.delete(
     (req, res): Promise<any> => userController.deleteById(req, res)
 );
 
+router.get(
+    '/:id/attendance-report',
+    validateMongoIdParams,
+    (req, res): Promise<any> => userController.getStudentAttendanceReport(req, res)
+);
+
 export default router;

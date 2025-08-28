@@ -259,5 +259,60 @@
                 }
             }
         }
+    },
+    "/user/{id}/attendance-report": {
+        "get": {
+            "summary": "Busca o relatório de presença de um aluno",
+            "description": "Este endpoint é utilizado para buscar o relatório completo de presença de um aluno em todas as disciplinas.<br/><br/>A resposta é um array de objetos, onde cada objeto representa o consolidado de uma disciplina. Abaixo estão os detalhes de cada propriedade retornada:<br/><ul><li><b>student_name:</b> Nome do aluno.</li><li><b>discipline_name:</b> Nome da disciplina.</li><li><b>total_classes:</b> Total de aulas planejadas para a disciplina.</li><li><b>classes_taught:</b> Total de aulas que já foram ministradas (baseado na presença do professor).</li><li><b>remaining_classes:</b> Total de aulas restantes para a disciplina.</li><li><b>present_count:</b> Quantidade de presenças do aluno na disciplina.</li><li><b>absent_count:</b> Quantidade de faltas do aluno na disciplina.</li><li><b>pending_count:</b> Quantidade de aulas em que a presença do aluno ainda não foi finalizada (status pendente).</li><li><b>total_students:</b> Total de alunos matriculados na disciplina.</li></ul>",
+            "tags": [
+                "Usuário"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID do aluno",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação realizada com sucesso!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/AttendanceReport"
+                                }
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Aluno não encontrado!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotFoundError"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro interno no servidor!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -93,5 +93,46 @@
                 "example": 1
             }
         }
+    },
+    "AttendanceReport": {
+        "type": "object",
+        "properties": {
+            "student_name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "discipline_name": {
+                "type": "string",
+                "example": "Cálculo I"
+            },
+            "total_classes": {
+                "type": "integer",
+                "example": 40
+            },
+            "classes_taught": {
+                "type": "integer",
+                "example": 10
+            },
+            "remaining_classes": {
+                "type": "integer",
+                "example": 30
+            },
+            "present_count": {
+                "type": "integer",
+                "example": 8
+            },
+            "absent_count": {
+                "type": "integer",
+                "example": 2
+            },
+            "pending_count": {
+                "type": "integer",
+                "example": 0
+            },
+            "total_students": {
+                "type": "integer",
+                "example": 25
+            }
+        }
     }
 }

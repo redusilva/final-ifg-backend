@@ -151,6 +151,24 @@ class UserController {
             });
         }
     }
+
+    async getStudentAttendanceReport(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const result = await (this.userService as any).getStudentAttendanceReport(id, null);
+
+            if (result.status !== 200) {
+                return res.status(result.status as number).json({ error: result.error });
+            }
+
+            return res.status(200).json(result.data);
+        } catch (error: any) {
+            this.logService.createLog(error.message, 'error');
+            return res.status(500).json({
+                error: 'Internal Server Error'
+            })
+        }
+    }
 }
 
 export default UserController;
