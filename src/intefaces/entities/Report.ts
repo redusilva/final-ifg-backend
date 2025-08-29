@@ -10,7 +10,7 @@ export interface IStudentReport {
     status_aluno: 'at_risk' | 'normal';
 }
 
-export interface IDisciplineReport {
+export interface IDisciplineDetailedReport {
     disciplina_nome: string;
     total_alunos: number;
     tabela_alunos: IStudentReport[];

@@ -1,88 +1,100 @@
 {
-  "type": "object",
-  "properties": {
-    "disciplina_nome": {
-      "type": "string"
-    },
-    "total_alunos": {
-      "type": "integer"
-    },
-    "tabela_alunos": {
-      "type": "array",
-      "items": {
+  "components": {
+    "schemas": {
+      "Report": {
         "type": "object",
         "properties": {
-          "name": {
+          "disciplina_nome": {
             "type": "string"
           },
-          "quantidade_faltas": {
+          "total_alunos": {
             "type": "integer"
           },
-          "porcentagem_presenca": {
-            "type": "string"
+          "tabela_alunos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "quantidade_faltas": {
+                  "type": "integer"
+                },
+                "porcentagem_presenca": {
+                  "type": "string"
+                },
+                "status_aluno": {
+                  "type": "string",
+                  "enum": [
+                    "at_risk",
+                    "normal"
+                  ]
+                }
+              }
+            }
           },
-          "status_aluno": {
-            "type": "string",
-            "enum": [
-              "at_risk",
-              "normal"
-            ]
-          }
-        }
-      }
-    },
-    "graficos_gerais": {
-      "type": "object",
-      "properties": {
-        "total_aulas_ministradas_num": {
-          "type": "integer"
-        },
-        "total_aulas_ministradas_pct": {
-          "type": "string"
-        },
-        "presenca_media": {
-          "type": "string"
-        },
-        "alunos_por_status": {
-          "type": "object",
-          "properties": {
-            "normal": {
-              "type": "integer"
-            },
-            "risco": {
-              "type": "integer"
-            },
-            "normal_pct": {
-              "type": "number"
-            },
-            "risco_pct": {
-              "type": "number"
+          "graficos_gerais": {
+            "type": "object",
+            "properties": {
+              "total_aulas_ministradas_num": {
+                "type": "integer"
+              },
+              "total_aulas_ministradas_pct": {
+                "type": "string"
+              },
+              "presenca_media": {
+                "type": "string"
+              },
+              "alunos_por_status": {
+                "type": "object",
+                "properties": {
+                  "normal": {
+                    "type": "integer"
+                  },
+                  "risco": {
+                    "type": "integer"
+                  },
+                  "normal_pct": {
+                    "type": "number"
+                  },
+                  "risco_pct": {
+                    "type": "number"
+                  }
+                }
+              },
+              "aulas_status": {
+                "type": "object",
+                "properties": {
+                  "ministradas_num": {
+                    "type": "integer"
+                  },
+                  "canceladas_num": {
+                    "type": "integer"
+                  },
+                  "restantes_num": {
+                    "type": "integer"
+                  },
+                  "ministradas_pct": {
+                    "type": "string"
+                  },
+                  "canceladas_pct": {
+                    "type": "string"
+                  },
+                  "restantes_pct": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           }
         },
-        "aulas_status": {
-          "type": "object",
-          "properties": {
-            "ministradas_num": {
-              "type": "integer"
-            },
-            "canceladas_num": {
-              "type": "integer"
-            },
-            "restantes_num": {
-              "type": "integer"
-            },
-            "ministradas_pct": {
-              "type": "string"
-            },
-            "canceladas_pct": {
-              "type": "string"
-            },
-            "restantes_pct": {
-              "type": "string"
-            }
-          }
-        }
+        "required": [
+          "disciplina_nome",
+          "total_alunos",
+          "tabela_alunos",
+          "graficos_gerais"
+        ]
       }
     }
   }

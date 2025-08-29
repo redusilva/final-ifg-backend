@@ -1,5 +1,5 @@
 {
-  "/discipline/{id}": {
+  "/report/discipline/{id}": {
     "get": {
       "tags": [
         "Reports"
@@ -24,7 +24,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "../schemas/DisciplineReport.json"
+                "$ref": "#/components/schemas/Report"
               },
               "example": {
                 "disciplina_nome": "Cálculo I",

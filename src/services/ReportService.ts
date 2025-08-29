@@ -1,7 +1,7 @@
 import { IAttendance } from '../intefaces/entities/Attendance';
 import { IDiscipline } from '../intefaces/entities/Discipline';
 import { IUser } from '../intefaces/entities/User';
-import { IDisciplineReport, IStudentReport } from '../intefaces/entities/Report';
+import { IDisciplineDetailedReport, IStudentReport } from '../intefaces/entities/Report';
 import { DisciplineModel } from '../models/DisciplineMongooseModel';
 import { UserModel } from '../models/UserMongooseModel';
 import { AttendanceModel } from '../models/AttendanceMongooseModel';
@@ -24,7 +24,7 @@ export class ReportService {
         this.attendanceModel = data.attendanceModel;
     }
 
-    public async getDisciplineReport(disciplineId: string): Promise<IDisciplineReport> {
+    public async getDisciplineReport(disciplineId: string): Promise<IDisciplineDetailedReport> {
         const discipline = await this.disciplineModel.findById(disciplineId).lean<IDiscipline>();
         if (!discipline) {
             throw new Error('Disciplina não encontrada.');
@@ -77,7 +77,7 @@ export class ReportService {
             restantes: (totalAulasRestantes / (discipline.total_classes ?? 1)) * 100
         };
 
-        const finalReport: IDisciplineReport = {
+        const finalReport: IDisciplineDetailedReport = {
             disciplina_nome: discipline.name,
             total_alunos: totalStudents,
             tabela_alunos: studentsReport,

@@ -10,7 +10,7 @@ router.use('/user', userRoutes);
 router.use('/discipline', disciplineRoutes);
 router.use('/classroom', classroomRoutes);
 router.use('/attendance', attendanceRoutes);
-router.use('/reports', reportRoutes);
+router.use('/report', reportRoutes);
 
 router.get('/', (req, res) => {
     res.send('API funcionando com Express + MongoDB + TypeScript');
