@@ -1,0 +1,75 @@
+{
+  "/discipline/{id}": {
+    "get": {
+      "tags": [
+        "Reports"
+      ],
+      "summary": "Gera um relatório completo de uma disciplina.",
+      "description": "Esta rota processa dados de presença e disciplina para fornecer uma visão detalhada do progresso da turma.",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "required": true,
+          "description": "O ID da disciplina para o relatório."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Relatório da disciplina retornado com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/DisciplineReport.json"
+              },
+              "example": {
+                "disciplina_nome": "Cálculo I",
+                "total_alunos": 25,
+                "tabela_alunos": [
+                  {
+                    "name": "Maria Oliveira",
+                    "quantidade_faltas": 5,
+                    "porcentagem_presenca": "87.50",
+                    "status_aluno": "normal"
+                  },
+                  {
+                    "name": "João Pedro",
+                    "quantidade_faltas": 15,
+                    "porcentagem_presenca": "62.50",
+                    "status_aluno": "at_risk"
+                  }
+                ],
+                "graficos_gerais": {
+                  "total_aulas_ministradas_num": 40,
+                  "total_aulas_ministradas_pct": "100.00",
+                  "presenca_media": "85.00",
+                  "alunos_por_status": {
+                    "normal": 20,
+                    "risco": 5,
+                    "normal_pct": 80,
+                    "risco_pct": 20
+                  },
+                  "aulas_status": {
+                    "ministradas_num": 35,
+                    "canceladas_num": 5,
+                    "restantes_num": 0,
+                    "ministradas_pct": "87.50",
+                    "canceladas_pct": "12.50",
+                    "restantes_pct": "0.00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Disciplina não encontrada."
+        }
+      }
+    }
+  }
+}
