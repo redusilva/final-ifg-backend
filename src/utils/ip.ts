@@ -13,7 +13,7 @@ export const validateIP = async (ipAddress: string): Promise<any> => {
         //     return true;
         // }
 
-        return data.final_score === 0;
+        return data.is_valid;
     } catch (error) {
         console.error('Error validating token:', error);
         return false;
