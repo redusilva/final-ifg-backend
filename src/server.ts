@@ -6,7 +6,7 @@ import { swaggerConfig } from './confg/swagger';
 import swaggerUi from 'swagger-ui-express';
 import { mongooseContainer } from './container/MongooseContainer';
 import authMiddleware from './middlewares/auth';
-import { scheduleHourlyJob } from './jobs/finalizeAttendance';
+import { processAbsences, scheduleHourlyJob } from './jobs/finalizeAttendance';
 
 const app = express();
 
@@ -27,6 +27,8 @@ app.set("trust proxy", true);
 async function start() {
     try {
         await mongooseContainer.mongooseService.connect();
+
+        processAbsences();
 
         scheduleHourlyJob();
 

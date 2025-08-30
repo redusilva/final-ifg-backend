@@ -101,8 +101,6 @@ class DisciplineController {
                 });
             }
 
-            this.notificationService.sendNotification(`O aluno ${user.name} foi inscrito na disciplina ${result.data.name}`);
-
             return res.status(200).json(result.data);
         } catch (error: any) {
             this.logService.createLog(error.message, 'error');
@@ -139,8 +137,6 @@ class DisciplineController {
                     errors: [result.error]
                 });
             }
-
-            this.notificationService.sendNotification(`O aluno ${user.name} foi removido da disciplina ${result.data.name}`);
 
             return res.status(200).json(result.data);
         } catch (error: any) {

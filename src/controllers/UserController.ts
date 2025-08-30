@@ -61,9 +61,6 @@ class UserController {
             }
 
             await this.databaseService.commitTransaction(session);
-            this.notificationService.sendNotification(
-                `Seja bem vindo ao nosso sistema, ${user.name}!`
-            );
 
             this.logService.createLog(`User ${user.name} created`, 'info');
 

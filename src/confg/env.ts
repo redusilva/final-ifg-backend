@@ -11,6 +11,9 @@ const envSchema = zod.object({
     AUTH_SERVICE_URL: zod.string().url(),
     IP_CHECKER_URL: zod.string().url(),
     TUNNEL_CHECKER_URL: zod.string().url(),
+    MAIN_BACKEND_USER: zod.string(),
+    MAIN_BACKEND_PASSWORD: zod.string(),
+    EMAIL_SERVICE_URL: zod.string().url()
 });
 
 const env = envSchema.safeParse(process.env);

@@ -2,8 +2,13 @@ import cron from 'node-cron';
 import { DisciplineModel } from '../models/DisciplineMongooseModel';
 import { AttendanceModel } from '../models/AttendanceMongooseModel';
 import { Types } from 'mongoose';
+import { EmailService } from '../services/EmailService';
+import { UserModel } from '../models/UserMongooseModel';
+import { getServiceToken } from 'utils/serviceAuth';
 
-async function processAbsences() {
+const emailService = new EmailService();
+
+export async function processAbsences() {
     console.log('Running hourly job to process absences...');
     const now = new Date();
     const dayOfWeek = now.getDay();
@@ -22,6 +27,13 @@ async function processAbsences() {
             return;
         }
 
+        const token = await getServiceToken();
+        console.log('token final: ', token);
+        if (!token) {
+            console.error('Error getting service token');
+            return;
+        }
+
         for (const discipline of disciplinesOfTheDay) {
             if (!discipline.schedule || discipline.schedule.length === 0) {
                 continue;
@@ -30,7 +42,7 @@ async function processAbsences() {
             const todaySchedules = discipline.schedule.filter(s => s.day_of_week === dayOfWeek && s.end_time <= currentTime);
 
             for (const scheduleItem of todaySchedules) {
-                const { start_time } = scheduleItem;
+                const { start_time, end_time } = scheduleItem;
                 let teacherIsPresent = false;
 
                 if (discipline.teacher_id) {
@@ -101,6 +113,19 @@ async function processAbsences() {
 
                     await AttendanceModel.insertMany(newAbsences);
                     console.log(`Created ${newAbsences.length} ABSENT records for discipline ${discipline.name} at ${start_time}.`);
+
+                    for (const studentId of absentStudents) {
+                        const student = await UserModel.findById(studentId).select('name');
+                        if (student) {
+                            await emailService.sendNotification({
+                                responsavelEmail: "rodrigoeduardo347@gmail.com",
+                                alunoNome: student.name,
+                                horarioInicio: start_time,
+                                horarioFim: end_time,
+                                token
+                            });
+                        }
+                    }
                 }
             }
         }

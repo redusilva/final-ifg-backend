@@ -1,3 +1,9 @@
 export interface IntNotificationService {
-    sendNotification(message: string): Promise<void>;
+    sendNotification(data: {
+        responsavelEmail: string;
+        alunoNome: string;
+        horarioInicio: string;
+        horarioFim: string;
+        token: string;
+    }): Promise<void>;
 }
