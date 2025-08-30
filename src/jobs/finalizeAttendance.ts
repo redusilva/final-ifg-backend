@@ -4,7 +4,7 @@ import { AttendanceModel } from '../models/AttendanceMongooseModel';
 import { Types } from 'mongoose';
 import { EmailService } from '../services/EmailService';
 import { UserModel } from '../models/UserMongooseModel';
-import { getServiceToken } from 'utils/serviceAuth';
+import { getServiceToken } from '../utils/serviceAuth';
 
 const emailService = new EmailService();
 
