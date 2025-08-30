@@ -96,7 +96,7 @@ class AttendanceService implements IAttendanceService {
             return buildServiceResponse(403, "This teacher is not assigned to this discipline.", null);
         }
 
-        const dayOfWeek = classDate.getUTCDay() - 1; // Adjusting to make Sunday=6
+        const dayOfWeek = classDate.getUTCDay();
         const isValidSchedule = discipline.schedule?.some(
             s => s.day_of_week === dayOfWeek && s.start_time === startTime
         );
