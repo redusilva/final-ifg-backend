@@ -1,5 +1,5 @@
 import axios from "axios";
-import { config } from "../confg/env";
+import { config } from "../config/env";
 
 export const validateToken = async (token: string): Promise<boolean> => {
     try {

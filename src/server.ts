@@ -1,8 +1,8 @@
 import express from 'express';
 import router from './routes';
-import { config } from './confg/env';
+import { config } from './config/env';
 import cors from 'cors';
-import { swaggerConfig } from './confg/swagger';
+import { swaggerConfig } from './config/swagger';
 import swaggerUi from 'swagger-ui-express';
 import { mongooseContainer } from './container/MongooseContainer';
 import authMiddleware from './middlewares/auth';

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { config } from "../confg/env";
+import { config } from "../config/env";
 
 export const validateIP = async (ipAddress: string): Promise<any> => {
     try {

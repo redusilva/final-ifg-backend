@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IntNotificationService } from "../intefaces/services/IntNotificationService";
-import { config } from "confg/env";
+import { config } from "config/env";
 
 class EmailService implements IntNotificationService {
     async sendNotification(data: {
