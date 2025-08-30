@@ -9,12 +9,11 @@ export const validateIP = async (ipAddress: string): Promise<any> => {
         });
         const data = await response.data;
         console.log('validateIP data:', data);
-        if (data.reason === 'Erro na API do AbuseIPDB: 401') {
-            return true;
-        }
+        // if (data.reason === 'Erro na API do AbuseIPDB: 401') {
+        //     return true;
+        // }
 
-        // se for 0, não é válido pois tirou a nota mínima
-        return data.final_score === 0 ? false : true;
+        return data.final_score === 0;
     } catch (error) {
         console.error('Error validating token:', error);
         return false;

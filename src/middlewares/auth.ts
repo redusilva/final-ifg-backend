@@ -16,6 +16,11 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction): 
         }
 
         const clientIp = req.ip as string;
+        const ip =
+            req.headers["x-forwarded-for"] ||
+            req.socket.remoteAddress;
+        const formattedIp = String(ip).replace("::ffff:", "");
+        console.log("ip:", formattedIp);
         const cleanIp = clientIp.replace("::ffff:", "");
 
         console.log("IP detectado:", cleanIp);
@@ -23,11 +28,15 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction): 
         //     validateIP(cleanIp),
         //     validateTunnel(cleanIp)
         // ])
-        // console.log("isValidIp:", isValidIp);
+        const isValidIp = await validateIP(cleanIp);
+        console.log("isValidIp:", isValidIp);
         // console.log("isValidTunnel:", isValidTunnel);
         // if (!isValidIp || !isValidTunnel) {
         //     return res.status(401).json({ message: 'Unauthorized: Invalid IP' });
         // }
+        if (!isValidIp) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid IP' });
+        }
 
         next();
     } catch (error) {
