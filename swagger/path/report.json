@@ -11,8 +11,7 @@
           "in": "path",
           "name": "id",
           "schema": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "required": true,
           "description": "O ID da disciplina para o relatório."
