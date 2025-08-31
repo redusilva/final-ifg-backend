@@ -39,10 +39,11 @@ export class ReportService {
         const studentAttendance: IAttendance[] = allAttendance.filter(a => a.studentId);
         const teacherAttendance: IAttendance[] = allAttendance.filter(a => a.teacherId);
 
-        const classesTaught: number = teacherAttendance.filter(a => a.status === 'PRESENT').length;
+        const uniqueClassDays = new Set(teacherAttendance.filter(a => a.status === 'PRESENT').map(a => a.classDate.toISOString().split('T')[0]));
+        const classesTaught: number = uniqueClassDays.size;
 
-        const studentsReport: IStudentReport[] = students.map((student: IUser) => {
-            const studentIdStr: string = student.id?.toString() || '';
+        const studentsReport: IStudentReport[] = students.map((student: any) => {
+            const studentIdStr: string = student._id?.toString() || '';
             const attendanceData: IAttendance[] = studentAttendance.filter(a => a.studentId?.toString() === studentIdStr);
 
             const presentCount: number = attendanceData.filter(a => a.status === 'PRESENT').length;
@@ -61,7 +62,7 @@ export class ReportService {
 
         const totalStudents: number = students.length;
         const totalAulasCanceladas: number = teacherAttendance.filter(a => a.status === 'ABSENT').length;
-        
+
         const totalAulasRestantes: number = (discipline.total_classes ?? 0) - classesTaught - totalAulasCanceladas;
 
         const alunosNormalCount: number = studentsReport.filter(s => s.status_aluno === 'normal').length;
@@ -70,7 +71,7 @@ export class ReportService {
         const mediaPresencaDisciplina: number = totalStudents > 0
             ? studentsReport.reduce((sum, s) => sum + parseFloat(s.porcentagem_presenca), 0) / totalStudents
             : 0;
-        
+
         const classPercentages = {
             ministradas: (classesTaught / (discipline.total_classes ?? 1)) * 100,
             canceladas: (totalAulasCanceladas / (discipline.total_classes ?? 1)) * 100,

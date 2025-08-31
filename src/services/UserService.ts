@@ -74,7 +74,9 @@ class UserService implements IntUserService {
                 status: 'PRESENT'
             }).session(session);
 
-            const classesTaught = teacherAttendances.length;
+            const uniqueClassDays = new Set(teacherAttendances.map(a => a.classDate.toISOString().split('T')[0]));
+            const classesTaught = uniqueClassDays.size;
+
             const remainingClasses = (discipline.total_classes as any || 0) - classesTaught;
 
             const present_count = studentAttendances.filter(a => a.status === 'PRESENT').length;
