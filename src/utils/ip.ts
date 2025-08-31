@@ -28,7 +28,7 @@ export const validateTunnel = async (ipAddress: string): Promise<any> => {
         });
 
         // se for suspeito, retorna false pois não é válido
-        return response.data.suspicious ? false : true;
+        return response.data.is_valid;
     } catch (error) {
         console.error('Error validating token:', error);
         return false;

@@ -19,19 +19,19 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction): 
         const cleanIp = clientIp.replace("::ffff:", "");
 
         console.log("IP detectado:", cleanIp);
-        // const [isValidIp, isValidTunnel] = await Promise.all([
-        //     validateIP(cleanIp),
-        //     validateTunnel(cleanIp)
-        // ])
-        const isValidIp = await validateIP(cleanIp);
+        const [isValidIp, isValidTunnel] = await Promise.all([
+            validateIP(cleanIp),
+            validateTunnel(cleanIp)
+        ])
+        // const isValidIp = await validateIP(cleanIp);
         console.log("isValidIp:", isValidIp);
-        // console.log("isValidTunnel:", isValidTunnel);
-        // if (!isValidIp || !isValidTunnel) {
-        //     return res.status(401).json({ message: 'Unauthorized: Invalid IP' });
-        // }
-        if (!isValidIp) {
+        console.log("isValidTunnel:", isValidTunnel);
+        if (!isValidIp || !isValidTunnel) {
             return res.status(401).json({ message: 'Unauthorized: Invalid IP' });
         }
+        // if (!isValidIp) {
+        //     return res.status(401).json({ message: 'Unauthorized: Invalid IP' });
+        // }
 
         next();
     } catch (error) {
