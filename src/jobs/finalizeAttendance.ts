@@ -5,8 +5,10 @@ import { Types } from 'mongoose';
 import { EmailService } from '../services/EmailService';
 import { UserModel } from '../models/UserMongooseModel';
 import { getServiceToken } from '../utils/serviceAuth';
+import { LogService } from '../services/LogService';
 
 const emailService = new EmailService();
+const logService = new LogService();
 
 export async function processAbsences() {
     console.log('Running hourly job to process absences...');
@@ -131,6 +133,8 @@ export async function processAbsences() {
         }
     } catch (error) {
         console.error("Error during hourly attendance finalization job:", error);
+    } finally {
+        logService.createLog(`Hourly attendance finalization job executed at ${currentTime}.`, 'info');
     }
 }
 

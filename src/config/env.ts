@@ -13,7 +13,10 @@ const envSchema = zod.object({
     TUNNEL_CHECKER_URL: zod.string().url(),
     MAIN_BACKEND_USER: zod.string(),
     MAIN_BACKEND_PASSWORD: zod.string(),
-    EMAIL_SERVICE_URL: zod.string().url()
+    EMAIL_SERVICE_URL: zod.string().url(),
+    LOGS_SERVICE_ID: zod.string(),
+    LOGS_SERVICE_URL: zod.string().url(),
+    LOGS_SERVICE_NAME: zod.string()
 });
 
 const env = envSchema.safeParse(process.env);

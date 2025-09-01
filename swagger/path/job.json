@@ -1,0 +1,39 @@
+{
+    "/run-job": {
+        "post": {
+            "summary": "Executar job manualmente",
+            "description": "Este endpoint é utilizado para acionar manualmente o job que processa e finaliza as presenças e ausências do dia.",
+            "tags": [
+                "Jobs"
+            ],
+            "responses": {
+                "200": {
+                    "description": "Job executado com sucesso!",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Job executado com sucesso!"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Erro ao executar o job.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InternalServerError"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
